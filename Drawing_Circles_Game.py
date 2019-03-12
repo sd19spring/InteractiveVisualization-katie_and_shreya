@@ -109,17 +109,25 @@ class Circle():
 #Creates ball list that the circles can be added to later
 ball_list = []
 
+drawing = False
 # -------- Main Program Loop -----------
 while not done:
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-    pos=pygame.mouse.get_pos()
-    x=pos[0]
-    y=pos[1]
-    if event.type==pygame.MOUSEBUTTONDOWN:
+        elif event.type==pygame.MOUSEBUTTONDOWN:
+            drawing = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            drawing = False
+
+    # drawing = True
+    if drawing:
+        pos=pygame.mouse.get_pos()
+        x=pos[0]
+        y=pos[1]
         ball_list.append(Circle(x, y))
+
 
     #Background color
     screen.fill(NIGHTSKY)
@@ -130,9 +138,7 @@ while not done:
 
     pygame.display.flip()
 
-
     clock.tick(60)
-
 
 pygame.quit()
 exit()
