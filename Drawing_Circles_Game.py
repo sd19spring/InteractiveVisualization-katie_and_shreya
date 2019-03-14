@@ -1,3 +1,6 @@
+"""Mini Project 3 Interactive Art
+Katie & Shreya
+"""
 
 import pygame
 import random
@@ -57,20 +60,21 @@ all_colors = [RED, REDORANGE, ORANGE, YELLOWORANGE, YELLOW, YELLOWGREEN, GREEN, 
 ocean_colors = [DARKGREEN,BLUEGREEN,CYAN,SKYBLUE,BLUE,INDIGO,NIGHTSKY,DARKPURPLE,DARKGREY]
 pastel_colors = [LIGHTGREY,LIGHTPURPLE,PINK,WHITE,SKYBLUE]
 warm_colors = [RED,REDORANGE,ORANGE,YELLOWORANGE,YELLOW,MAGENTA,PINK]
+reds_greens = [RED,REDORANGE,YELLOWGREEN,GREEN,DARKGREEN,BLUEGREEN]
 
 possible_speeds = [-3, -2, -1, 1, 2, 3]
 
 
 #Defines the class of circle(some charactaristics of the circle and everything it does)
 class Circle():
-    def __init__(self, x_location, y_location, color_list):
+    def __init__(self, x_location, y_location, color_list, size):
         self.x_location=x_location
         self.y_location=y_location
         #you can change the speeds here by making them equal to something else
         self.x_speed = random.choice(possible_speeds)
         self.y_speed = random.choice(possible_speeds)
         #you can change the size here
-        self.size = random.randint(7, 15)
+        self.size = random.randint(5*size, 10*size) #7,15
         # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
         self.color = color_list[random.randint(0,len(color_list)-1)]
 
@@ -83,6 +87,15 @@ class Circle():
         self.x_location += self.x_speed
 
     #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
+    def Fall(self, screen):
+        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+
+        #Adds the variable of speed to the variable of location every tick to make the circle move
+        self.y_location += 1#abs(self.y_speed)
+
+    def Scroll(self, screen):
+        self.x_location += 1 #abs(self.x_speed)
+
     def Bounce(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
 
@@ -96,27 +109,19 @@ class Circle():
         self.x_location += self.x_speed
         self.y_location += self.y_speed
 
-
-    def Slow(self, screen):
+    def Stay(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
-        #Adds the variable of speed to the variable of location every tick to make the circle move
-        self.y_location += self.y_speed
-        self.x_location += self.x_speed
 
 
-        #Slows circles
-        self.x_speed = self.x_speed/2
-        self.y_speed = self.y_speed/2
-
-
-print("Use Number keys to change colors, use c to clear and q to quit")
+print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
 #Creates ball list that the circles can be added to later
-ball_list = []
+shape_list = []
 
 drawing = False
 color_list = all_colors
+size = 2
 # -------- Main Program Loop -----------
 while not done:
     # --- Main event loop
@@ -129,15 +134,37 @@ while not done:
             drawing = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_c:
-                ball_list.clear()
-            elif event.key == pygame.K_1:
+                shape_list.clear()
+            elif event.key == pygame.K_a:
                 color_list = all_colors
-            elif event.key == pygame.K_2:
+            elif event.key == pygame.K_s:
                 color_list = ocean_colors
-            elif event.key == pygame.K_3:
+            elif event.key == pygame.K_d:
                 color_list = pastel_colors
-            elif event.key == pygame.K_4:
+            elif event.key == pygame.K_f:
                 color_list = warm_colors
+            elif event.key == pygame.K_g:
+                color_list = reds_greens
+
+            elif event.key == pygame.K_1:
+                size = 1
+            elif event.key == pygame.K_2:
+                size = 2
+            elif event.key == pygame.K_3:
+                size = 3
+            elif event.key == pygame.K_4:
+                size = 4
+            elif event.key == pygame.K_5:
+                size = 5
+            elif event.key == pygame.K_6:
+                size = 6
+            elif event.key == pygame.K_7:
+                size = 7
+            elif event.key == pygame.K_8:
+                size = 8
+            elif event.key == pygame.K_9:
+                size = 9
+
             elif event.key == pygame.K_q:
                 done = True
 
@@ -146,16 +173,17 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        ball_list.append(Circle(x, y, color_list))
+        shape_list.append(Circle(x, y, color_list, size))
 
 
 
     #Background color
-    screen.fill(WHITE)
+    screen.fill(BLACK)
 
     #tells all balls in the list to fall
-    for Ball in ball_list:
-        Ball.Slow(screen)
+    for Shape in shape_list:
+        # Ball.Stay(screen)
+        Shape.Fall(screen)
 
     pygame.display.flip()
 
