@@ -135,12 +135,45 @@ class Triangle(Polygon):
         self.median = math.sqrt(self.size**2 + (self.size/2)**2)
 
     def draw(self, screen, line_thickness = 2):
-
-        top_vertex = [self.x_location, self.y_location + (2/3)*self.size]
-        left_vertex = [self.x_location - (1/2)*self.size, self.y_location - (1/3)*self.size]
-        right_vertex = [self.x_location + (1/2)*self.size, self.y_location - (1/3)*self.size]
+        top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
+        left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
+        right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
 
         pygame.draw.polygon(screen, self.color, [right_vertex, top_vertex, left_vertex], line_thickness)
+
+class Bow_tie(Polygon):
+    def __init__(self, x_location, y_location, color_list, size, sides=4):
+        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def draw(self, screen, line_thickness = 2):
+        vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
+        vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4], line_thickness)
+
+class Square(Polygon):
+    def __init__(self, x_location, y_location, color_list, size, sides=4):
+        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def draw(self, screen, line_thickness = 2):
+        vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+        vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
+        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4], line_thickness)
+
+
+class Hexagon(Polygon):
+    def __init__(self, x_location, y_location, color_list, size, sides=6):
+        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def draw(self, screen, line_thickness = 2):
+        vertex1 = [self.x_location, self.y_location+self.size]
+        vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
+        vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        vertex4 = [self.x_location, self.y_location-self.size]
+        vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
+        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4, vertex5, vertex6], line_thickness)
+
 
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
@@ -215,7 +248,11 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
+        shape_list.append(Square(x, y, color_list, size))
+        shape_list.append(Circle(x, y, color_list, size))
         shape_list.append(Triangle(x, y, color_list, size))
+        shape_list.append(Hexagon(x, y, color_list, size))
+        shape_list.append(Bow_tie(x, y, color_list, size))
 
 
 
