@@ -78,13 +78,8 @@ class Circle():
         # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
         self.color = color_list[random.randint(0,len(color_list)-1)]
 
-    #Defines the function move that draws the circles and makes them move offscreen
-    def Move(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
-
-        #Adds the variable of speed to the variable of location every tick to make the circle move
-        self.y_location += self.y_speed
-        self.x_location += self.x_speed
+    def Stay(self, screen):
+        pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
     #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
     def Fall(self, screen):
@@ -94,7 +89,16 @@ class Circle():
         self.y_location += 1#abs(self.y_speed)
 
     def Scroll(self, screen):
+        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
         self.x_location += 1 #abs(self.x_speed)
+    #Defines the function move that draws the circles and makes them move offscreen
+
+    def Scatter(self, screen):
+        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+
+        #Adds the variable of speed to the variable of location every tick to make the circle move
+        self.y_location += self.y_speed
+        self.x_location += self.x_speed
 
     def Bounce(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
@@ -109,9 +113,6 @@ class Circle():
         self.x_location += self.x_speed
         self.y_location += self.y_speed
 
-    def Stay(self, screen):
-        pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
-
 
 
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
@@ -121,6 +122,7 @@ shape_list = []
 
 drawing = False
 color_list = all_colors
+mode = 1
 size = 2
 # -------- Main Program Loop -----------
 while not done:
@@ -147,23 +149,31 @@ while not done:
                 color_list = reds_greens
 
             elif event.key == pygame.K_1:
-                size = 1
+                mode = 1
             elif event.key == pygame.K_2:
-                size = 2
+                mode = 2
             elif event.key == pygame.K_3:
-                size = 3
+                mode = 3
             elif event.key == pygame.K_4:
-                size = 4
+                mode = 4
             elif event.key == pygame.K_5:
-                size = 5
-            elif event.key == pygame.K_6:
-                size = 6
-            elif event.key == pygame.K_7:
-                size = 7
-            elif event.key == pygame.K_8:
-                size = 8
-            elif event.key == pygame.K_9:
-                size = 9
+                mode = 5
+
+
+            elif event.key == pygame.K_MINUS:
+                if size <= 1:
+                    size = 1
+                else:
+                    size -= 1
+            elif event.key == pygame.K_EQUALS or event.key == pygame.K_PLUS:
+                size += 1
+
+
+            elif event.key == pygame.K_SPACE:
+                mode += 1
+                if mode == 6:
+                    mode = 0
+
 
             elif event.key == pygame.K_q:
                 done = True
@@ -181,9 +191,21 @@ while not done:
     screen.fill(BLACK)
 
     #tells all balls in the list to fall
-    for Shape in shape_list:
+    for shape in shape_list:
         # Ball.Stay(screen)
-        Shape.Fall(screen)
+        if mode == 1:
+            shape.Stay(screen)
+        elif mode == 2:
+            shape.Fall(screen)
+        elif mode == 3:
+            shape.Scroll(screen)
+        elif mode == 4:
+            shape.Scatter(screen)
+        elif mode == 5:
+            shape.Bounce(screen)
+
+
+
 
     pygame.display.flip()
 
