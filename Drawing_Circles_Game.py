@@ -4,6 +4,7 @@ Katie & Shreya
 
 import pygame
 import random
+import math
 
 
 # Define some colors
@@ -128,6 +129,19 @@ class Polygon(Shape):
     def draw(self, screen):
         pygame.draw.polygon(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
+class Triangle(Polygon):
+    def __init__(self, x_location, y_location, color_list, size, sides=3):
+        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+        self.median = math.sqrt(self.size**2 + (self.size/2)**2)
+
+    def draw(self, screen, line_thickness = 2):
+
+        top_vertex = [self.x_location, self.y_location + (2/3)*self.size]
+        left_vertex = [self.x_location - (1/2)*self.size, self.y_location - (1/3)*self.size]
+        right_vertex = [self.x_location + (1/2)*self.size, self.y_location - (1/3)*self.size]
+
+        pygame.draw.polygon(screen, self.color, [right_vertex, top_vertex, left_vertex], line_thickness)
+
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
 #Creates ball list that the circles can be added to later
@@ -201,7 +215,7 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        shape_list.append(Circle(x, y, color_list, size))
+        shape_list.append(Triangle(x, y, color_list, size))
 
 
 
