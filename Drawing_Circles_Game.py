@@ -66,7 +66,7 @@ possible_speeds = [-3, -2, -1, 1, 2, 3]
 
 
 #Defines the class of circle(some charactaristics of the circle and everything it does)
-class Circle():
+class Shape():
     def __init__(self, x_location, y_location, color_list, size):
         self.x_location=x_location
         self.y_location=y_location
@@ -78,29 +78,29 @@ class Circle():
         # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
         self.color = color_list[random.randint(0,len(color_list)-1)]
 
-    def Stay(self, screen):
+    def stay(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
     #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
-    def Fall(self, screen):
+    def fall(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
 
         #Adds the variable of speed to the variable of location every tick to make the circle move
         self.y_location += 1#abs(self.y_speed)
 
-    def Scroll(self, screen):
+    def scroll(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
         self.x_location += 1 #abs(self.x_speed)
     #Defines the function move that draws the circles and makes them move offscreen
 
-    def Scatter(self, screen):
+    def scatter(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
 
         #Adds the variable of speed to the variable of location every tick to make the circle move
         self.y_location += self.y_speed
         self.x_location += self.x_speed
 
-    def Bounce(self, screen):
+    def bounce(self, screen):
         pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
 
         #Tells ball to turn around when it reaches the edge of the screen
@@ -190,7 +190,7 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        shape_list.append(Circle(x, y, color_list, size))
+        shape_list.append(Shape(x, y, color_list, size))
 
 
 
@@ -201,15 +201,15 @@ while not done:
     for shape in shape_list:
         # Ball.Stay(screen)
         if mode == 1:
-            shape.Stay(screen)
+            shape.stay(screen)
         elif mode == 2:
-            shape.Fall(screen)
+            shape.fall(screen)
         elif mode == 3:
-            shape.Scroll(screen)
+            shape.scroll(screen)
         elif mode == 4:
-            shape.Scatter(screen)
+            shape.scatter(screen)
         elif mode == 5:
-            shape.Bounce(screen)
+            shape.bounce(screen)
 
 
 
