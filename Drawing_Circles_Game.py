@@ -185,8 +185,6 @@ while not done:
                 if mode == 6:
                     mode = 0
 
-
-
             elif event.key == pygame.K_q:
                 done = True
 
