@@ -78,30 +78,30 @@ class Shape():
         # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
         self.color = color_list[random.randint(0,len(color_list)-1)]
 
-    def stay(self, screen):
-        pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
+    def draw(self, screen):
+        pass
 
     #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
     def fall(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+        self.draw(screen)
 
         #Adds the variable of speed to the variable of location every tick to make the circle move
         self.y_location += 1#abs(self.y_speed)
 
     def scroll(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+        self.draw(screen)
         self.x_location += 1 #abs(self.x_speed)
     #Defines the function move that draws the circles and makes them move offscreen
 
     def scatter(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+        self.draw(screen)
 
         #Adds the variable of speed to the variable of location every tick to make the circle move
         self.y_location += self.y_speed
         self.x_location += self.x_speed
 
     def bounce(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_location, self.y_location], self.size)
+        self.draw(screen)
 
         #Tells ball to turn around when it reaches the edge of the screen
         if self.x_location >= SCREEN_WIDTH - self.size or self.x_location < self.size:
@@ -113,7 +113,12 @@ class Shape():
         self.x_location += self.x_speed
         self.y_location += self.y_speed
 
+class Circle(Shape):
+    def __init__(self, x_location, y_location, color_list, size):
+        Shape.__init__(self, x_location, y_location, color_list, size)
 
+    def draw(self, screen):
+        pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
@@ -190,7 +195,7 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        shape_list.append(Shape(x, y, color_list, size))
+        shape_list.append(Circle(x, y, color_list, size))
 
 
 
@@ -201,7 +206,7 @@ while not done:
     for shape in shape_list:
         # Ball.Stay(screen)
         if mode == 1:
-            shape.stay(screen)
+            shape.draw(screen)
         elif mode == 2:
             shape.fall(screen)
         elif mode == 3:
