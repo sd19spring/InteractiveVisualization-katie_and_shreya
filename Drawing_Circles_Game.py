@@ -124,6 +124,7 @@ drawing = False
 color_list = all_colors
 mode = 1
 size = 2
+
 # -------- Main Program Loop -----------
 while not done:
     # --- Main event loop
@@ -135,30 +136,35 @@ while not done:
         elif event.type == pygame.MOUSEBUTTONUP:
             drawing = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_c:
+            keys = pygame.key.get_pressed()
+            mods = pygame.key.get_mods()
+
+            if keys[pygame.K_c]:
                 shape_list.clear()
-            elif event.key == pygame.K_a:
+            elif keys[pygame.K_a]:
                 color_list = all_colors
-            elif event.key == pygame.K_s:
-                color_list = ocean_colors
-            elif event.key == pygame.K_d:
+            elif keys[pygame.K_s]:
+                if mods & pygame.KMOD_CTRL:
+                    pygame.image.save(screen, "screenshot.jpg")
+                else:
+                    color_list = ocean_colors
+            elif keys[pygame.K_d]:
                 color_list = pastel_colors
-            elif event.key == pygame.K_f:
+            elif keys[pygame.K_f]:
                 color_list = warm_colors
-            elif event.key == pygame.K_g:
+            elif keys[pygame.K_g]:
                 color_list = reds_greens
 
-            elif event.key == pygame.K_1:
+            elif keys[pygame.K_1]:
                 mode = 1
-            elif event.key == pygame.K_2:
+            elif keys[pygame.K_2]:
                 mode = 2
-            elif event.key == pygame.K_3:
+            elif keys[pygame.K_3]:
                 mode = 3
-            elif event.key == pygame.K_4:
+            elif keys[pygame.K_4]:
                 mode = 4
-            elif event.key == pygame.K_5:
+            elif keys[pygame.K_5]:
                 mode = 5
-
 
             elif event.key == pygame.K_MINUS:
                 if size <= 1:
@@ -173,6 +179,7 @@ while not done:
                 mode += 1
                 if mode == 6:
                     mode = 0
+
 
 
             elif event.key == pygame.K_q:
