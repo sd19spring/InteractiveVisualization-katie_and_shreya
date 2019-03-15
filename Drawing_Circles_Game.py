@@ -120,6 +120,14 @@ class Circle(Shape):
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
+class Polygon(Shape):
+    def __init__(self, x_location, y_location, color_list, size, sides):
+        Shape.__init__(self, x_location, y_location, color_list, size)
+        self.sides = sides
+
+    def draw(self, screen):
+        pygame.draw.polygon(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
+
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
 #Creates ball list that the circles can be added to later
