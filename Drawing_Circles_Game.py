@@ -1,10 +1,12 @@
-"""Mini Project 3 Interactive Art
+"""
+Mini Project 3 Interactive Art
 Katie & Shreya
 """
 
 import pygame
 import random
 import math
+import numpy as np
 
 
 # Define some colors
@@ -114,6 +116,9 @@ class Shape():
         self.x_location += self.x_speed
         self.y_location += self.y_speed
 
+    def rotate(self, screen):
+        pass
+
 class Circle(Shape):
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
@@ -125,55 +130,126 @@ class Polygon(Shape):
     def __init__(self, x_location, y_location, color_list, size, sides):
         Shape.__init__(self, x_location, y_location, color_list, size)
         self.sides = sides
+        self.points_list = [[int(self.x_location), int(self.y_location)]]
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
+        pygame.draw.polygon(screen, self.color, self.points_list, self.size)
+
+    # def rotate(self, screen, theta):
+    #     theta = theta*math.pi/180
+    #     rot_1 = [math.cos(theta), math.sin(theta)]
+    #     rot_2 = [-math.sin(theta), math.cos(theta)]
+    #
+    #     rotation_matrix = np.array([rot_1, rot_2])
+    #     points_x = []
+    #     points_y = []
+    #     for point in self.points_list:
+    #         points_x.append(point[0])
+    #         points_y.append(point[1])
+    #
+    #     points = np.array([points_x, points_y])
+    #     rotated_points = np.matmul(rotation_matrix, points)
+    #
+    #     rot_points_x = rotated_points[0]
+    #     rot_points_y = rotated_points[1]
+    #
+    #     rot_points = []
+    #     for i in range(len(rot_points_x)):
+    #         point = [rot_points_x[i], rot_points_y[i]]
+    #         rot_points.append(point)
+    #     print(rot_points)
+    #
+    #     self.points_list = rot_points
+    #     return self
+
 
 class Triangle(Polygon):
     def __init__(self, x_location, y_location, color_list, size, sides=3):
         Polygon.__init__(self, x_location, y_location, color_list, size, sides)
         self.median = math.sqrt(self.size**2 + (self.size/2)**2)
 
-    def draw(self, screen, line_thickness = 2):
-        top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
-        left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
-        right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
+        self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
+        self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
+        self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
+        self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
 
-        pygame.draw.polygon(screen, self.color, [right_vertex, top_vertex, left_vertex], line_thickness)
+    def draw(self, screen, line_thickness = 2):
+
+        self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
+        self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
+        self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
+        self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
+
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
 class Bow_tie(Polygon):
     def __init__(self, x_location, y_location, color_list, size, sides=4):
         Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
+
     def draw(self, screen, line_thickness = 2):
-        vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
-        vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
-        vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
-        vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
-        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4], line_thickness)
+
+        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
+
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
 class Square(Polygon):
     def __init__(self, x_location, y_location, color_list, size, sides=4):
         Polygon.__init__(self, x_location, y_location, color_list, size, sides)
-    def draw(self, screen, line_thickness = 2):
-        vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
-        vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
-        vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
-        vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
-        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4], line_thickness)
+        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
 
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
+
+    def draw(self, screen, line_thickness = 2):
+
+        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
+        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
+        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
+
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
+
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
 class Hexagon(Polygon):
     def __init__(self, x_location, y_location, color_list, size, sides=6):
         Polygon.__init__(self, x_location, y_location, color_list, size, sides)
-    def draw(self, screen, line_thickness = 2):
-        vertex1 = [self.x_location, self.y_location+self.size]
-        vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
-        vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
-        vertex4 = [self.x_location, self.y_location-self.size]
-        vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
-        vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
-        pygame.draw.polygon(screen, self.color, [vertex1, vertex2, vertex3, vertex4, vertex5, vertex6], line_thickness)
+        self.vertex1 = [self.x_location, self.y_location+self.size]
+        self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
+        self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        self.vertex4 = [self.x_location, self.y_location-self.size]
+        self.vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        self.vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
 
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3,
+                            self.vertex4, self.vertex5, self.vertex6]
+
+    def draw(self, screen, line_thickness = 2):
+
+        self.vertex1 = [self.x_location, self.y_location+self.size]
+        self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
+        self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        self.vertex4 = [self.x_location, self.y_location-self.size]
+        self.vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
+        self.vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
+
+        self.points_list = [self.vertex1, self.vertex2, self.vertex3,
+                            self.vertex4, self.vertex5, self.vertex6]
+
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
@@ -243,18 +319,14 @@ while not done:
             elif event.key == pygame.K_q:
                 done = True
 
-
     if drawing:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        shape_list.append(Square(x, y, color_list, size))
-        shape_list.append(Circle(x, y, color_list, size))
-        shape_list.append(Triangle(x, y, color_list, size))
-        shape_list.append(Hexagon(x, y, color_list, size))
-        shape_list.append(Bow_tie(x, y, color_list, size))
-
-
+        shapes = [Square(x, y, color_list, size), Circle(x, y, color_list, size),
+        Triangle(x, y, color_list, size), Hexagon(x, y, color_list, size),
+        Bow_tie(x, y, color_list, size)]
+        shape_list.append(shapes[4])
 
     #Background color
     screen.fill(BLACK)
