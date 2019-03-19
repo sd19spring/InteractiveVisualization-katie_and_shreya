@@ -251,6 +251,13 @@ class Hexagon(Polygon):
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
+class Line(Shape):
+    def __init__(self, x_location, y_location, color_list, size):
+        Shape.__init__(self, x_location, y_location, color_list, size)
+
+    def draw(self, screen):
+        pygame.draw.line(screen, self.color, (self.x_location, self.y_location), (self.x_location + 5, self.y_location))
+
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
 #Creates ball list that the circles can be added to later
@@ -325,8 +332,8 @@ while not done:
         y=pos[1]
         shapes = [Square(x, y, color_list, size), Circle(x, y, color_list, size),
         Triangle(x, y, color_list, size), Hexagon(x, y, color_list, size),
-        Bow_tie(x, y, color_list, size)]
-        shape_list.append(shapes[4])
+        Bow_tie(x, y, color_list, size), Line(x, y, color_list, size)]
+        shape_list.append(shapes[5])
 
     #Background color
     screen.fill(BLACK)
