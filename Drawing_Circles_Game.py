@@ -79,7 +79,8 @@ class Shape():
         #you can change the size here
         self.size = random.randint(5*size, 10*size) #7,15
         # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
-        self.color = color_list[random.randint(0,len(color_list)-1)]
+        self.color_list = color_list
+        self.color = color_list[random.randint(0, len(color_list) - 1)]
 
     def draw(self, screen):
         pass
@@ -119,12 +120,22 @@ class Shape():
     def rotate(self, screen):
         pass
 
+    def mirror(self, screen):
+        self.draw(screen)
+        mirrored = Shape(self.x_location + 100, self.y_location, self.color_list, self.size)
+        mirrored.draw(screen)
+
 class Circle(Shape):
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
+
+    def mirror(self, screen):
+        self.draw(screen)
+        mirrored = Circle(self.x_location + 50, self.y_location, self.color_list, self.size)
+        mirrored.draw(screen)
 
 class Polygon(Shape):
     def __init__(self, x_location, y_location, color_list, size, sides):
@@ -251,13 +262,6 @@ class Hexagon(Polygon):
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
-class Line(Shape):
-    def __init__(self, x_location, y_location, color_list, size):
-        Shape.__init__(self, x_location, y_location, color_list, size)
-
-    def draw(self, screen):
-        pygame.draw.line(screen, self.color, (self.x_location, self.y_location), (self.x_location + 5, self.y_location))
-
 print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
 
 #Creates ball list that the circles can be added to later
@@ -308,6 +312,8 @@ while not done:
                 mode = 4
             elif keys[pygame.K_5]:
                 mode = 5
+            elif keys[pygame.K_6]:
+                mode = 6
 
             elif event.key == pygame.K_MINUS:
                 if size <= 1:
@@ -332,8 +338,8 @@ while not done:
         y=pos[1]
         shapes = [Square(x, y, color_list, size), Circle(x, y, color_list, size),
         Triangle(x, y, color_list, size), Hexagon(x, y, color_list, size),
-        Bow_tie(x, y, color_list, size), Line(x, y, color_list, size)]
-        shape_list.append(shapes[5])
+        Bow_tie(x, y, color_list, size)]
+        shape_list.append(shapes[1])
 
     #Background color
     screen.fill(BLACK)
@@ -351,8 +357,8 @@ while not done:
             shape.scatter(screen)
         elif mode == 5:
             shape.bounce(screen)
-
-
+        elif mode == 6:
+            shape.mirror(screen)
 
 
     pygame.display.flip()
