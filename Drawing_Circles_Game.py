@@ -262,7 +262,32 @@ class Hexagon(Polygon):
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
-print("Use Number keys to change size, use asdf to change color, use c to clear and q to quit")
+def print_instructions():
+    print("Welcome to our drawing game! Here's some tips to get you started.")
+    print()
+    print("GENERAL KEY COMMANDS:")
+    print("CTRL + S: saves image")
+    print("c: clears the screen")
+    print("Q: quits")
+    print()
+    print("COLOR OPTIONS:")
+    print("a: all colors")
+    print("s: ocean color palette")
+    print("d: pastel color palette")
+    print("f: warm color palette")
+    print("g: reds and greens")
+    print()
+    print("MOVEMENT/SIZE OPTIONS:")
+    print("1: stay still")
+    print("2: fall")
+    print("3: scroll")
+    print("4: scatter")
+    print("5: bounce")
+    print("SPACE: goes to the next mode (and loops back)")
+    print("+: increases size")
+    print("-: decreases size")
+
+print_instructions()
 
 #Creates ball list that the circles can be added to later
 shape_list = []
@@ -292,7 +317,8 @@ while not done:
                 color_list = all_colors
             elif keys[pygame.K_s]:
                 if mods & pygame.KMOD_CTRL:
-                    pygame.image.save(screen, "screenshot.jpg")
+                    filename = str(input("Enter a name for the screenshot: ")) + ".jpg"
+                    pygame.image.save(screen, filename)
                 else:
                     color_list = ocean_colors
             elif keys[pygame.K_d]:
@@ -315,21 +341,21 @@ while not done:
             elif keys[pygame.K_6]:
                 mode = 6
 
-            elif event.key == pygame.K_MINUS:
+            elif keys[pygame.K_MINUS]:
                 if size <= 1:
                     size = 1
                 else:
                     size -= 1
-            elif event.key == pygame.K_EQUALS or event.key == pygame.K_PLUS:
+            elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
                 size += 1
 
 
-            elif event.key == pygame.K_SPACE:
+            elif keys[pygame.K_SPACE]:
                 mode += 1
                 if mode == 6:
                     mode = 0
 
-            elif event.key == pygame.K_q:
+            elif keys[pygame.K_q]:
                 done = True
 
     if drawing:
