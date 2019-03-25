@@ -44,7 +44,7 @@ pygame.init()
 
 # Set the width and height of the screen [width, height]
 SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 1000
+SCREEN_HEIGHT = 800
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -346,9 +346,11 @@ while not done:
                 mode = 5
             elif keys[pygame.K_6]:
                 mode = 6
+            elif keys[pygame.K_7]:
+                mode = 7
             elif keys[pygame.K_SPACE]:
                 mode += 1
-                if mode == 6:
+                if mode == 7:
                     mode = 0
 
 # keys for manipulating size
@@ -381,20 +383,39 @@ while not done:
         x=pos[0]
         y=pos[1]
         x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
+        y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
         shape_types = [Circle(x, y, color_list, size),
         Square(x, y, color_list, size),
         Triangle(x, y, color_list, size),
         Hexagon(x, y, color_list, size),
         Bow_tie(x, y, color_list, size)]
-        
+
         reverse_shape_types = [Circle(x_r, y, color_list, size),
         Square(x_r, y, color_list, size),
         Triangle(x_r, y, color_list, size),
         Hexagon(x_r, y, color_list, size),
         Bow_tie(x_r, y, color_list, size)]
+
+        down_shape_types = [Circle(x, y_d, color_list, size),
+        Square(x, y_d, color_list, size),
+        Triangle(x, y_d, color_list, size),
+        Hexagon(x, y_d, color_list, size),
+        Bow_tie(x, y_d, color_list, size)]
+
+        reverse_down_shape_types = [Circle(x_r, y_d, color_list, size),
+        Square(x_r, y_d, color_list, size),
+        Triangle(x_r, y_d, color_list, size),
+        Hexagon(x_r, y_d, color_list, size),
+        Bow_tie(x_r, y_d, color_list, size)]
+
         if mode == 6:
             shape_list.append(shape_types[shape_type])
             shape_list.append(reverse_shape_types[shape_type])
+        elif mode == 7:
+            shape_list.append(shape_types[shape_type])
+            shape_list.append(reverse_shape_types[shape_type])
+            shape_list.append(down_shape_types[shape_type])
+            shape_list.append(reverse_down_shape_types[shape_type])
         else:
             shape_list.append(shape_types[shape_type])
 
@@ -414,8 +435,9 @@ while not done:
             shape.scatter(screen)
         elif mode == 5:
             shape.bounce(screen)
-        elif mode == 6:
+        elif mode == 6 or mode == 7:
             shape.mirror(screen)
+
 
 
     pygame.display.flip()
