@@ -263,20 +263,18 @@ class Hexagon(Polygon):
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
 def print_instructions():
-    print("Welcome to our drawing game! Here's some tips to get you started.")
-    print()
+    print("\nWelcome to our drawing game! Here's some tips to get you started.\n")
+
     print("GENERAL KEY COMMANDS:")
     print("CTRL + S: saves image")
     print("c: clears the screen")
-    print("Q: quits")
-    print()
+    print("Q: quits\n")
     print("COLOR OPTIONS:")
     print("a: all colors")
     print("s: ocean color palette")
     print("d: pastel color palette")
     print("f: warm color palette")
-    print("g: reds and greens")
-    print()
+    print("g: reds and greens\n")
     print("MOVEMENT/SIZE OPTIONS:")
     print("1: stay still")
     print("2: fall")
@@ -286,6 +284,7 @@ def print_instructions():
     print("SPACE: goes to the next mode (and loops back)")
     print("+: increases size")
     print("-: decreases size")
+    print("up and down keys cycle through different shapes")
 
 print_instructions()
 
@@ -296,10 +295,12 @@ drawing = False
 color_list = all_colors
 mode = 1
 size = 2
+shape_type = 0
+
 
 # -------- Main Program Loop -----------
 while not done:
-    # --- Main event loop
+    # --- Main event loop ---
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -307,12 +308,16 @@ while not done:
             drawing = True
         elif event.type == pygame.MOUSEBUTTONUP:
             drawing = False
+
+# gets key that is pressed, determines which key that is, and acts accordingly
         elif event.type == pygame.KEYDOWN:
             keys = pygame.key.get_pressed()
             mods = pygame.key.get_mods()
 
             if keys[pygame.K_c]:
                 shape_list.clear()
+
+# keys for changing color scheme
             elif keys[pygame.K_a]:
                 color_list = all_colors
             elif keys[pygame.K_s]:
@@ -328,6 +333,7 @@ while not done:
             elif keys[pygame.K_g]:
                 color_list = reds_greens
 
+# keys for manipulating modes (drawing, bouncing, scrolling, etc)
             elif keys[pygame.K_1]:
                 mode = 1
             elif keys[pygame.K_2]:
@@ -340,7 +346,12 @@ while not done:
                 mode = 5
             elif keys[pygame.K_6]:
                 mode = 6
+            elif keys[pygame.K_SPACE]:
+                mode += 1
+                if mode == 6:
+                    mode = 0
 
+# keys for manipulating size
             elif keys[pygame.K_MINUS]:
                 if size <= 1:
                     size = 1
@@ -349,12 +360,19 @@ while not done:
             elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
                 size += 1
 
+            elif keys[pygame.K_UP]:
+                if shape_type == len(shape_types)-1:
+                    shape_type = 0
+                else:
+                    shape_type += 1
+            elif keys[pygame.K_DOWN]:
+                if shape_type == 0:
+                    shape_type = len(shape_types)-1
+                else:
+                    shape_type -= 1
 
-            elif keys[pygame.K_SPACE]:
-                mode += 1
-                if mode == 6:
-                    mode = 0
 
+# quits when q is pressed
             elif keys[pygame.K_q]:
                 done = True
 
@@ -362,10 +380,23 @@ while not done:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
-        shapes = [Square(x, y, color_list, size), Circle(x, y, color_list, size),
-        Triangle(x, y, color_list, size), Hexagon(x, y, color_list, size),
+        x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
+        shape_types = [Circle(x, y, color_list, size),
+        Square(x, y, color_list, size),
+        Triangle(x, y, color_list, size),
+        Hexagon(x, y, color_list, size),
         Bow_tie(x, y, color_list, size)]
-        shape_list.append(shapes[1])
+        
+        reverse_shape_types = [Circle(x_r, y, color_list, size),
+        Square(x_r, y, color_list, size),
+        Triangle(x_r, y, color_list, size),
+        Hexagon(x_r, y, color_list, size),
+        Bow_tie(x_r, y, color_list, size)]
+        if mode == 6:
+            shape_list.append(shape_types[shape_type])
+            shape_list.append(reverse_shape_types[shape_type])
+        else:
+            shape_list.append(shape_types[shape_type])
 
     #Background color
     screen.fill(BLACK)
