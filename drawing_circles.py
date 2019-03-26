@@ -39,6 +39,15 @@ TAN=(105, 65, 45)
 BROWN=(120, 70, 15)
 DARKBROWN=(80, 40, 10)
 
+# Define mode constants
+DRAW_MODE = 1
+FALL_MODE = 2
+SCROLL_MODE = 3
+SCATTER_MODE = 4
+BOUNCE_MODE = 5
+MIRROR_ONE_MODE = 6
+MIRROR_TWO_MODE = 7
+
 #Tells the pygame program for python to start
 pygame.init()
 
@@ -132,11 +141,6 @@ class Circle(Shape):
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
-    # def mirror(self, screen):
-    #     self.draw(screen)
-    #     mirrored = Circle(self.x_location + 50, self.y_location, self.color_list, self.size)
-    #     mirrored.draw(screen)
-
 class Polygon(Shape):
     def __init__(self, x_location, y_location, color_list, size, sides):
         Shape.__init__(self, x_location, y_location, color_list, size)
@@ -145,33 +149,6 @@ class Polygon(Shape):
 
     def draw(self, screen):
         pygame.draw.polygon(screen, self.color, self.points_list, self.size)
-
-    # def rotate(self, screen, theta):
-    #     theta = theta*math.pi/180
-    #     rot_1 = [math.cos(theta), math.sin(theta)]
-    #     rot_2 = [-math.sin(theta), math.cos(theta)]
-    #
-    #     rotation_matrix = np.array([rot_1, rot_2])
-    #     points_x = []
-    #     points_y = []
-    #     for point in self.points_list:
-    #         points_x.append(point[0])
-    #         points_y.append(point[1])
-    #
-    #     points = np.array([points_x, points_y])
-    #     rotated_points = np.matmul(rotation_matrix, points)
-    #
-    #     rot_points_x = rotated_points[0]
-    #     rot_points_y = rotated_points[1]
-    #
-    #     rot_points = []
-    #     for i in range(len(rot_points_x)):
-    #         point = [rot_points_x[i], rot_points_y[i]]
-    #         rot_points.append(point)
-    #     print(rot_points)
-    #
-    #     self.points_list = rot_points
-    #     return self
 
 
 class Triangle(Polygon):
@@ -338,22 +315,22 @@ while not done:
 
 # keys for manipulating modes (drawing, bouncing, scrolling, etc)
             elif keys[pygame.K_1]:
-                mode = 1
+                mode = DRAW_MODE
             elif keys[pygame.K_2]:
-                mode = 2
+                mode = FALL_MODE
             elif keys[pygame.K_3]:
-                mode = 3
+                mode = SCROLL_MODE
             elif keys[pygame.K_4]:
-                mode = 4
+                mode = SCATTER_MODE
             elif keys[pygame.K_5]:
-                mode = 5
+                mode = BOUNCE_MODE
             elif keys[pygame.K_6]:
-                mode = 6
+                mode = MIRROR_ONE_MODE
             elif keys[pygame.K_7]:
-                mode = 7
+                mode = MIRROR_TWO_MODE
             elif keys[pygame.K_SPACE]:
                 mode += 1
-                if mode == 7:
+                if mode == MIRROR_TWO_MODE:
                     mode = 0
 
 # keys for manipulating size
@@ -411,10 +388,10 @@ while not done:
         Hexagon(x_r, y_d, color_list, size),
         Bow_tie(x_r, y_d, color_list, size)]
 
-        if mode == 6:
+        if mode == MIRROR_ONE_MODE:
             shape_list.append(shape_types[shape_type])
             shape_list.append(reverse_shape_types[shape_type])
-        elif mode == 7:
+        elif mode == MIRROR_TWO_MODE:
             shape_list.append(shape_types[shape_type])
             shape_list.append(reverse_shape_types[shape_type])
             shape_list.append(down_shape_types[shape_type])
@@ -428,18 +405,16 @@ while not done:
     #tells all balls in the list to fall
     for shape in shape_list:
         # Ball.Stay(screen)
-        if mode == 1:
+        if mode == DRAW_MODE:
             shape.draw(screen)
-        elif mode == 2:
+        elif mode == FALL_MODE:
             shape.fall(screen)
-        elif mode == 3:
+        elif mode == SCROLL_MODE:
             shape.scroll(screen)
-        elif mode == 4:
+        elif mode == SCATTER_MODE:
             shape.scatter(screen)
-        elif mode == 5:
+        elif mode == BOUNCE_MODE:
             shape.bounce(screen)
-        elif mode == 6 or mode == 7:
-            shape.mirror(screen)
 
     pygame.display.flip()
 
