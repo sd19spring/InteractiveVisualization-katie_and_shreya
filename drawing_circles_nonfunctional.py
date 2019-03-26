@@ -268,136 +268,295 @@ def print_instructions():
 
 print_instructions()
 
-#Creates ball list that the circles can be added to later
-shape_list = []
-
-drawing = False
-color_list = all_colors
-mode = 1
-size = 2
-shape_type = 0
 
 
+if __name__ == "__main__":
+
+    #Creates ball list that the circles can be added to later
+    shape_list = []
+
+    drawing = False
+    color_list = all_colors
+    mode = 1
+    size = 2
+    shape_type = 0
 # -------- Main Program Loop -----------
-while not done:
-    # --- Main event loop ---
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        elif event.type==pygame.MOUSEBUTTONDOWN:
-            drawing = True
-        elif event.type == pygame.MOUSEBUTTONUP:
-            drawing = False
-
-# gets key that is pressed, determines which key that is, and acts accordingly
-        elif event.type == pygame.KEYDOWN:
-            keys = pygame.key.get_pressed()
-            mods = pygame.key.get_mods()
-
-            if keys[pygame.K_c]:
-                shape_list.clear()
-
-# keys for changing color scheme
-            elif keys[pygame.K_a]:
-                color_list = all_colors
-            elif keys[pygame.K_s]:
-                if mods & pygame.KMOD_CTRL:
-                    filename = str(input("Enter a name for the screenshot: ")) + ".jpg"
-                    pygame.image.save(screen, filename)
-                else:
-                    color_list = ocean_colors
-            elif keys[pygame.K_d]:
-                color_list = pastel_colors
-            elif keys[pygame.K_f]:
-                color_list = warm_colors
-            elif keys[pygame.K_g]:
-                color_list = reds_greens
-
-# keys for manipulating modes (drawing, bouncing, scrolling, etc)
-            elif keys[pygame.K_1]:
-                mode = DRAW_MODE
-            elif keys[pygame.K_2]:
-                mode = FALL_MODE
-            elif keys[pygame.K_3]:
-                mode = SCROLL_MODE
-            elif keys[pygame.K_4]:
-                mode = SCATTER_MODE
-            elif keys[pygame.K_5]:
-                mode = BOUNCE_MODE
-            elif keys[pygame.K_6]:
-                mode = MIRROR_ONE_MODE
-            elif keys[pygame.K_7]:
-                mode = MIRROR_TWO_MODE
-            elif keys[pygame.K_SPACE]:
-                mode += 1
-                if mode == MIRROR_TWO_MODE:
-                    mode = 0
-
-# keys for manipulating size
-            elif keys[pygame.K_MINUS]:
-                if size <= 1:
-                    size = 1
-                else:
-                    size -= 1
-            elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
-                size += 1
-
-            elif keys[pygame.K_UP]:
-                if shape_type == 4:
-                    shape_type = 0
-                else:
-                    shape_type += 1
-            elif keys[pygame.K_DOWN]:
-                if shape_type == 0:
-                    shape_type = 4
-                else:
-                    shape_type -= 1
-
-
-# quits when q is pressed
-            elif keys[pygame.K_q]:
+    while not done:
+        # --- Main event loop ---
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 done = True
+            elif event.type==pygame.MOUSEBUTTONDOWN:
+                drawing = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                drawing = False
 
-    if drawing:
-        pos=pygame.mouse.get_pos()
-        x=pos[0]
-        y=pos[1]
-        x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
-        y_r = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+    # gets key that is pressed, determines which key that is, and acts accordingly
+            elif event.type == pygame.KEYDOWN:
+                keys = pygame.key.get_pressed()
+                mods = pygame.key.get_mods()
 
-        shape_types = [Circle,Square,Triangle,Hexagon,Bow_tie]
+                if keys[pygame.K_c]:
+                    shape_list.clear()
+
+    # keys for changing color scheme
+                elif keys[pygame.K_a]:
+                    color_list = all_colors
+                elif keys[pygame.K_s]:
+                    if mods & pygame.KMOD_CTRL:
+                        filename = str(input("Enter a name for the screenshot: ")) + ".jpg"
+                        pygame.image.save(screen, filename)
+                    else:
+                        color_list = ocean_colors
+                elif keys[pygame.K_d]:
+                    color_list = pastel_colors
+                elif keys[pygame.K_f]:
+                    color_list = warm_colors
+                elif keys[pygame.K_g]:
+                    color_list = reds_greens
+
+    # keys for manipulating modes (drawing, bouncing, scrolling, etc)
+                elif keys[pygame.K_1]:
+                    mode = DRAW_MODE
+                elif keys[pygame.K_2]:
+                    mode = FALL_MODE
+                elif keys[pygame.K_3]:
+                    mode = SCROLL_MODE
+                elif keys[pygame.K_4]:
+                    mode = SCATTER_MODE
+                elif keys[pygame.K_5]:
+                    mode = BOUNCE_MODE
+                elif keys[pygame.K_6]:
+                    mode = MIRROR_ONE_MODE
+                elif keys[pygame.K_7]:
+                    mode = MIRROR_TWO_MODE
+                elif keys[pygame.K_SPACE]:
+                    mode += 1
+                    if mode == MIRROR_TWO_MODE:
+                        mode = 0
+
+    # keys for manipulating size
+                elif keys[pygame.K_MINUS]:
+                    if size <= 1:
+                        size = 1
+                    else:
+                        size -= 1
+                elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
+                    size += 1
+
+                elif keys[pygame.K_UP]:
+                    if shape_type == 4:
+                        shape_type = 0
+                    else:
+                        shape_type += 1
+                elif keys[pygame.K_DOWN]:
+                    if shape_type == 0:
+                        shape_type = 4
+                    else:
+                        shape_type -= 1
+
+
+    # quits when q is pressed
+                elif keys[pygame.K_q]:
+                    done = True
+
+        if drawing:
+            pos=pygame.mouse.get_pos()
+            x=pos[0]
+            y=pos[1]
+            x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
+            y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+            shape_types = [Circle,
+            Square,
+            Triangle,
+            Hexagon,
+            Bow_tie]
 
         if mode == MIRROR_ONE_MODE:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y,color_list,size))
+            shape_list.append(shape_types[shape_type(x,y,color_list,size)])
+            shape_list.append(reverse_shape_types[shape_type])
         elif mode == MIRROR_TWO_MODE:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x,y_r,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y_r,color_list,size))
+            shape_list.append(shape_types[shape_type])
+            shape_list.append(reverse_shape_types[shape_type])
+            shape_list.append(down_shape_types[shape_type])
+            shape_list.append(reverse_down_shape_types[shape_type])
         else:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
+            shape_list.append(shape_types[shape_type(x,y,color_list,size)])
 
-    #Background color
-    screen.fill(BLACK)
+        #Background color
+        screen.fill(BLACK)
 
-    #tells all balls in the list to fall
-    for shape in shape_list:
-        # Ball.Stay(screen)
-        if mode == DRAW_MODE or MIRROR_ONE_MODE or MIRROR_TWO_MODE:
-            shape.draw(screen)
-        elif mode == FALL_MODE:
-            shape.fall(screen)
-        elif mode == SCROLL_MODE:
-            shape.scroll(screen)
-        elif mode == SCATTER_MODE:
-            shape.scatter(screen)
-        elif mode == BOUNCE_MODE:
-            shape.bounce(screen)
+        #tells all balls in the list to fall
+        for shape in shape_list:
+            # Ball.Stay(screen)
+            if mode == DRAW_MODE:
+                shape.draw(screen)
+            elif mode == FALL_MODE:
+                shape.fall(screen)
+            elif mode == SCROLL_MODE:
+                shape.scroll(screen)
+            elif mode == SCATTER_MODE:
+                shape.scatter(screen)
+            elif mode == BOUNCE_MODE:
+                shape.bounce(screen)
 
-    pygame.display.flip()
+        pygame.display.flip()
 
-    clock.tick(60)
+        clock.tick(60)
 
-pygame.quit()
-exit()
+    pygame.quit()
+    exit()
+
+
+
+
+    #
+    # while not done:
+    #     # --- Main event loop ---
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             done = True
+    #         elif event.type==pygame.MOUSEBUTTONDOWN:
+    #             drawing = True
+    #         elif event.type == pygame.MOUSEBUTTONUP:
+    #             drawing = False
+    #
+    # # gets key that is pressed, determines which key that is, and acts accordingly
+    #         elif event.type == pygame.KEYDOWN:
+    #             keys = pygame.key.get_pressed()
+    #             mods = pygame.key.get_mods()
+    #
+    #             if keys[pygame.K_c]:
+    #                 shape_list.clear()
+    #
+    # # keys for changing color scheme
+    #             elif keys[pygame.K_a]:
+    #                 color_list = all_colors
+    #             elif keys[pygame.K_s]:
+    #                 if mods & pygame.KMOD_CTRL:
+    #                     filename = str(input("Enter a name for the screenshot: ")) + ".jpg"
+    #                     pygame.image.save(screen, filename)
+    #                 else:
+    #                     color_list = ocean_colors
+    #             elif keys[pygame.K_d]:
+    #                 color_list = pastel_colors
+    #             elif keys[pygame.K_f]:
+    #                 color_list = warm_colors
+    #             elif keys[pygame.K_g]:
+    #                 color_list = reds_greens
+    #
+    # # keys for manipulating modes (drawing, bouncing, scrolling, etc)
+    #             elif keys[pygame.K_1]:
+    #                 mode = DRAW_MODE
+    #             elif keys[pygame.K_2]:
+    #                 mode = FALL_MODE
+    #             elif keys[pygame.K_3]:
+    #                 mode = SCROLL_MODE
+    #             elif keys[pygame.K_4]:
+    #                 mode = SCATTER_MODE
+    #             elif keys[pygame.K_5]:
+    #                 mode = BOUNCE_MODE
+    #             elif keys[pygame.K_6]:
+    #                 mode = MIRROR_ONE_MODE
+    #             elif keys[pygame.K_7]:
+    #                 mode = MIRROR_TWO_MODE
+    #             elif keys[pygame.K_SPACE]:
+    #                 mode += 1
+    #                 if mode == MIRROR_TWO_MODE:
+    #                     mode = 0
+    #
+    # # keys for manipulating size
+    #             elif keys[pygame.K_MINUS]:
+    #                 if size <= 1:
+    #                     size = 1
+    #                 else:
+    #                     size -= 1
+    #             elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
+    #                 size += 1
+    #
+    #             elif keys[pygame.K_UP]:
+    #                 if shape_type == 4:
+    #                     shape_type = 0
+    #                 else:
+    #                     shape_type += 1
+    #             elif keys[pygame.K_DOWN]:
+    #                 if shape_type == 0:
+    #                     shape_type = 4
+    #                 else:
+    #                     shape_type -= 1
+    #
+    # # quits when q is pressed
+    #             elif keys[pygame.K_q]:
+    #                 done = True
+    #
+    #     if drawing:
+    #         pos=pygame.mouse.get_pos()
+    #         x=pos[0]
+    #         y=pos[1]
+    #         x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
+    #         y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+    #
+    #         shape_types = [Circle,
+    #         Square,
+    #         Triangle,
+    #         Hexagon,
+    #         Bow_tie]
+    #
+    #         # shape_types = [Circle(x, y, color_list, size),
+    #         # Square(x, y, color_list, size),
+    #         # Triangle(x, y, color_list, size),
+    #         # Hexagon(x, y, color_list, size),
+    #         # Bow_tie(x, y, color_list, size)]
+    #
+    #         # reverse_shape_types = [Circle(x_r, y, color_list, size),
+    #         # Square(x_r, y, color_list, size),
+    #         # Triangle(x_r, y, color_list, size),
+    #         # Hexagon(x_r, y, color_list, size),
+    #         # Bow_tie(x_r, y, color_list, size)]
+    #         #
+    #         # down_shape_types = [Circle(x, y_d, color_list, size),
+    #         # Square(x, y_d, color_list, size),
+    #         # Triangle(x, y_d, color_list, size),
+    #         # Hexagon(x, y_d, color_list, size),
+    #         # Bow_tie(x, y_d, color_list, size)]
+    #         #
+    #         # reverse_down_shape_types = [Circle(x_r, y_d, color_list, size),
+    #         # Square(x_r, y_d, color_list, size),
+    #         # Triangle(x_r, y_d, color_list, size),
+    #         # Hexagon(x_r, y_d, color_list, size),
+    #         # Bow_tie(x_r, y_d, color_list, size)]
+    #
+    #         if mode == MIRROR_ONE_MODE:
+    #             shape_list.append(shape_types[shape_type(x,y,color_list,size)])
+    #             shape_list.append(reverse_shape_types[shape_type])
+    #         elif mode == MIRROR_TWO_MODE:
+    #             shape_list.append(shape_types[shape_type])
+    #             shape_list.append(reverse_shape_types[shape_type])
+    #             shape_list.append(down_shape_types[shape_type])
+    #             shape_list.append(reverse_down_shape_types[shape_type])
+    #         else:
+    #             shape_list.append(shape_types[shape_type(x,y,color_list,size)])
+    #
+    #     #Background color
+    #     screen.fill(BLACK)
+    #
+    #     #tells all balls in the list to fall
+    #     for shape in shape_list:
+    #         # Ball.Stay(screen)
+    #         if mode == DRAW_MODE:
+    #             shape.draw(screen)
+    #         elif mode == FALL_MODE:
+    #             shape.fall(screen)
+    #         elif mode == SCROLL_MODE:
+    #             shape.scroll(screen)
+    #         elif mode == SCATTER_MODE:
+    #             shape.scatter(screen)
+    #         elif mode == BOUNCE_MODE:
+    #             shape.bounce(screen)
+    #
+    #     pygame.display.flip()
+    #
+    #     clock.tick(60)
+    #
+    # pygame.quit()
+    # exit()
