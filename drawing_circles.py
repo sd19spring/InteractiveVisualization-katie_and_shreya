@@ -91,6 +91,9 @@ class Shape():
         self.color_list = color_list
         self.color = color_list[random.randint(0, len(color_list) - 1)]
 
+        self.x_r =  SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - self.x_location)
+        self.y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - self.y_location)
+
     def draw(self, screen):
         pass
 
@@ -129,31 +132,39 @@ class Shape():
     def rotate(self, screen):
         pass
 
-    def mirror(self, screen):
-        self.draw(screen)
-        mirrored = Shape(self.x_location + 50, self.y_location, self.color_list, self.size)
-        mirrored.draw(screen)
-
 class Circle(Shape):
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
+        self.size = size
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
+    def mirror_y(self):
+        mirrored = Circle(self.x_r, self.y_location, self.color_list, self.size)
+        return mirrored
+
+    def mirror_x(self):
+        mirrored = Circle(self.x_location, self.y_d, self.color_list, self.size)
+        return mirrored
+
+    def mirror_both(self):
+        mirrored = Circle(self.x_r, self.y_d, self.color_list, self.size)
+        return mirrored
+
 class Polygon(Shape):
-    def __init__(self, x_location, y_location, color_list, size, sides):
+    def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
-        self.sides = sides
         self.points_list = [[int(self.x_location), int(self.y_location)]]
+        self.size = size
 
     def draw(self, screen):
         pygame.draw.polygon(screen, self.color, self.points_list, self.size)
 
 
 class Triangle(Polygon):
-    def __init__(self, x_location, y_location, color_list, size, sides=3):
-        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def __init__(self, x_location, y_location, color_list, size):
+        Polygon.__init__(self, x_location, y_location, color_list, size)
         self.median = math.sqrt(self.size**2 + (self.size/2)**2)
 
         self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
@@ -170,9 +181,21 @@ class Triangle(Polygon):
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
+    def mirror_y(self):
+        mirrored = Triangle(self.x_r, self.y_location, self.color_list, self.size)
+        return mirrored
+
+    def mirror_x(self):
+        mirrored = Triangle(self.x_location, self.y_d, self.color_list, self.size)
+        return mirrored
+
+    def mirror_both(self):
+        mirrored = Triangle(self.x_r, self.y_d, self.color_list, self.size)
+        return mirrored
+
 class Bow_tie(Polygon):
-    def __init__(self, x_location, y_location, color_list, size, sides=4):
-        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def __init__(self, x_location, y_location, color_list, size):
+        Polygon.__init__(self, x_location, y_location, color_list, size)
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
@@ -190,10 +213,22 @@ class Bow_tie(Polygon):
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
+    def mirror_y(self):
+        mirrored = Bow_tie(self.x_r, self.y_location, self.color_list, self.size)
+        return mirrored
+
+    def mirror_x(self):
+        mirrored = Bow_tie(self.x_location, self.y_d, self.color_list, self.size)
+        return mirrored
+
+    def mirror_both(self):
+        mirrored = Bow_tie(self.x_r, self.y_d, self.color_list, self.size)
+        return mirrored
 
 class Square(Polygon):
-    def __init__(self, x_location, y_location, color_list, size, sides=4):
-        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def __init__(self, x_location, y_location, color_list, size):
+        Polygon.__init__(self, x_location, y_location, color_list, size)
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
@@ -211,10 +246,22 @@ class Square(Polygon):
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
+    def mirror_y(self):
+        mirrored = Square(self.x_r, self.y_location, self.color_list, self.size)
+        return mirrored
+
+    def mirror_x(self):
+        mirrored = Square(self.x_location, self.y_d, self.color_list, self.size)
+        return mirrored
+
+    def mirror_both(self):
+        mirrored = Square(self.x_r, self.y_d, self.color_list, self.size)
+        return mirrored
 
 class Hexagon(Polygon):
-    def __init__(self, x_location, y_location, color_list, size, sides=6):
-        Polygon.__init__(self, x_location, y_location, color_list, size, sides)
+    def __init__(self, x_location, y_location, color_list, size):
+        Polygon.__init__(self, x_location, y_location, color_list, size)
         self.vertex1 = [self.x_location, self.y_location+self.size]
         self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
         self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
@@ -238,6 +285,18 @@ class Hexagon(Polygon):
                             self.vertex4, self.vertex5, self.vertex6]
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
+    def mirror_y(self):
+        mirrored = Hexagon(self.x_r, self.y_location, self.color_list, self.size)
+        return mirrored
+
+    def mirror_x(self):
+        mirrored = Hexagon(self.x_location, self.y_d, self.color_list, self.size)
+        return mirrored
+
+    def mirror_both(self):
+        mirrored = Hexagon(self.x_r, self.y_d, self.color_list, self.size)
+        return mirrored
 
 def print_instructions():
     print("\nWelcome to our drawing game! Here's some tips to get you started.\n")
@@ -353,31 +412,64 @@ while not done:
                 else:
                     shape_type -= 1
 
+# Key for undoing
+            elif keys[pygame.K_z] and mods & pygame.KMOD_CTRL:
+                shape_list = shape_list[:len(shape_list)-5]
 
 # quits when q is pressed
             elif keys[pygame.K_q]:
                 done = True
+
 
     if drawing:
         pos=pygame.mouse.get_pos()
         x=pos[0]
         y=pos[1]
         x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
-        y_r = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+        y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+        shape_types = [Circle(x, y, color_list, size),
+        Square(x, y, color_list, size),
+        Triangle(x, y, color_list, size),
+        Hexagon(x, y, color_list, size),
+        Bow_tie(x, y, color_list, size)]
 
-        shape_types = [Circle,Square,Triangle,Hexagon,Bow_tie]
+        # reverse_shape_types = [Circle(x_r, y, color_list, size),
+        # Square(x_r, y, color_list, size),
+        # Triangle(x_r, y, color_list, size),
+        # Hexagon(x_r, y, color_list, size),
+        # Bow_tie(x_r, y, color_list, size)]
+        #
+        # down_shape_types = [Circle(x, y_d, color_list, size),
+        # Square(x, y_d, color_list, size),
+        # Triangle(x, y_d, color_list, size),
+        # Hexagon(x, y_d, color_list, size),
+        # Bow_tie(x, y_d, color_list, size)]
+        #
+        # reverse_down_shape_types = [Circle(x_r, y_d, color_list, size),
+        # Square(x_r, y_d, color_list, size),
+        # Triangle(x_r, y_d, color_list, size),
+        # Hexagon(x_r, y_d, color_list, size),
+        # Bow_tie(x_r, y_d, color_list, size)]
 
+        curr_shape = shape_types[shape_type]
         if mode == MIRROR_ONE_MODE:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y,color_list,size))
+            shape_list.append(curr_shape)
+            shape_list.append(curr_shape.mirror_y())
+            # print(type(shape))
+            # print(type(shape.mirror()))
+            # shape_list.append((type(shape))shape.mirror())
+            # # shape_list.append(reverse_shape_types[shape_type])
         elif mode == MIRROR_TWO_MODE:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y,color_list,size))
-            shape_list.append(shape_types[shape_type](x,y_r,color_list,size))
-            shape_list.append(shape_types[shape_type](x_r,y_r,color_list,size))
+            shape_list.append(curr_shape)
+            shape_list.append(curr_shape.mirror_y())
+            shape_list.append(curr_shape.mirror_x())
+            shape_list.append(curr_shape.mirror_both())
+            # shape_list.append(shape_types[shape_type])
+            # shape_list.append(reverse_shape_types[shape_type])
+            # shape_list.append(down_shape_types[shape_type])
+            # shape_list.append(reverse_down_shape_types[shape_type])
         else:
-            shape_list.append(shape_types[shape_type](x,y,color_list,size))
-
+            shape_list.append(curr_shape)
     #Background color
     screen.fill(BLACK)
 
