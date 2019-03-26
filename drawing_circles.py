@@ -269,12 +269,15 @@ def print_instructions():
     print("CTRL + S: saves image")
     print("c: clears the screen")
     print("Q: quits\n")
-    print("COLOR OPTIONS:")
+    print("APPEARANCE OPTIONS:")
     print("a: all colors")
     print("s: ocean color palette")
     print("d: pastel color palette")
     print("f: warm color palette")
     print("g: reds and greens\n")
+    print("Shapes are in this order: Circle, Triangle, Hexagon, Square, Bowtie")
+    print("UP: go to the next shape")
+    print("DOWN: go to the previous shape")
     print("MOVEMENT/SIZE OPTIONS:")
     print("1: stay still")
     print("2: fall")
@@ -363,13 +366,13 @@ while not done:
                 size += 1
 
             elif keys[pygame.K_UP]:
-                if shape_type == len(shape_types)-1:
+                if shape_type == 4:
                     shape_type = 0
                 else:
                     shape_type += 1
             elif keys[pygame.K_DOWN]:
                 if shape_type == 0:
-                    shape_type = len(shape_types)-1
+                    shape_type = 4
                 else:
                     shape_type -= 1
 
@@ -437,8 +440,6 @@ while not done:
             shape.bounce(screen)
         elif mode == 6 or mode == 7:
             shape.mirror(screen)
-
-
 
     pygame.display.flip()
 
