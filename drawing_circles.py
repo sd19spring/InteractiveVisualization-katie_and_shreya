@@ -1,6 +1,7 @@
 """
 Mini Project 3 Interactive Art
 Katie & Shreya
+
 This is the version that Katie used to mess around with simplifying the
 mirroring code. It also has a working control-z
 """
@@ -10,8 +11,27 @@ import random
 import math
 import numpy as np
 
-#Defines the class of circle(some charactaristics of the circle and everything it does)
 class Shape():
+'''
+Defines a generic shape class, with general characteristics of any shape.
+Attributes:
+x_location, y_location - coordinates of the center of the shape
+x_speed - number representing the speed of movement in the x direction
+y_speed - number representing speed of movement in the y direction
+size - number representing the size (range?)
+color_list - list of all possible colors that this shape could take
+color - tuple representing the color the shape, picked random from the color_list
+x_r - the coordinate of the shape if it were to be reflected across the y-axis
+y_d - the coordinates of the shape if it were to be reflected across the x-axis
+
+Functions:
+draw - renders the shape
+fall - makes the shape fall
+scroll - makes the shape scroll
+scatter - makes all shapes on the screen spread out chaotically
+bounce - like scatter, but the shapes reorient themselves randomly if they hit
+the edges of the screen
+'''
     def __init__(self, x_location, y_location, color_list, size):
         self.x_location=x_location
         self.y_location=y_location
@@ -28,6 +48,13 @@ class Shape():
         self.y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - self.y_location)
 
     def draw(self, screen):
+        '''
+        Draws the shape.
+
+        This function is overwritten in all the subclasses of the Shape class,
+        because each specific shape requires a different function from pygame
+        to render it.
+        '''
         pass
 
     #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
@@ -61,9 +88,6 @@ class Shape():
         #Makes circles move
         self.x_location += self.x_speed
         self.y_location += self.y_speed
-
-    def rotate(self, screen):
-        pass
 
 class Circle(Shape):
     def __init__(self, x_location, y_location, color_list, size):
@@ -108,11 +132,6 @@ class Triangle(Polygon):
 
     def draw(self, screen, line_thickness = 2):
 
-        self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
-        self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
-        self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
-        self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
-
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
@@ -142,13 +161,6 @@ class Bow_tie(Polygon):
 
     def draw(self, screen, line_thickness = 2):
 
-        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
-        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
-        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
-        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
-
-        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
-
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
@@ -177,13 +189,6 @@ class Square(Polygon):
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
     def draw(self, screen, line_thickness = 2):
-
-        self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
-        self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
-        self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
-        self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
-
-        self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
@@ -216,16 +221,6 @@ class Hexagon(Polygon):
                             self.vertex4, self.vertex5, self.vertex6]
 
     def draw(self, screen, line_thickness = 2):
-
-        self.vertex1 = [self.x_location, self.y_location+self.size]
-        self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
-        self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
-        self.vertex4 = [self.x_location, self.y_location-self.size]
-        self.vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
-        self.vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
-
-        self.points_list = [self.vertex1, self.vertex2, self.vertex3,
-                            self.vertex4, self.vertex5, self.vertex6]
 
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
