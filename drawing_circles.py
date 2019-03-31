@@ -1,9 +1,14 @@
 """
 Mini Project 3 Interactive Art
 Katie & Shreya
-
-This is the version that Katie used to mess around with simplifying the
-mirroring code. It also has a working control-z
+Note: This code was based off code written in the Girls Who Code Summer immersion
+program, which both Katie and Shreya particpated in. Katie wrote a very basic,
+and slightly buggy version of this program in 2016 by combining the two activities
+bouncing ball:
+https://github.com/katie608/GWC/blob/master/python/Bounce_Ball_Green.py
+and snow:
+https://github.com/katie608/GWC/blob/master/python/Rainbow%20snow%20Bubbles.py
+Since then, we have added a lot of new features.
 """
 
 import pygame
@@ -12,26 +17,25 @@ import math
 import numpy as np
 
 class Shape():
-'''
-Defines a generic shape class, with general characteristics of any shape.
-Attributes:
-x_location, y_location - coordinates of the center of the shape
-x_speed - number representing the speed of movement in the x direction
-y_speed - number representing speed of movement in the y direction
-size - number representing the size (range?)
-color_list - list of all possible colors that this shape could take
-color - tuple representing the color the shape, picked random from the color_list
-x_r - the coordinate of the shape if it were to be reflected across the y-axis
-y_d - the coordinates of the shape if it were to be reflected across the x-axis
-
-Functions:
-draw - renders the shape
-fall - makes the shape fall
-scroll - makes the shape scroll
-scatter - makes all shapes on the screen spread out chaotically
-bounce - like scatter, but the shapes reorient themselves randomly if they hit
-the edges of the screen
-'''
+    '''
+    Defines a generic shape class, with general characteristics of any shape.
+    Attributes:
+    x_location, y_location - coordinates of the center of the shape
+    x_speed - number representing the speed of movement in the x direction
+    y_speed - number representing speed of movement in the y direction
+    size - number representing the size (range?)
+    color_list - list of all possible colors that this shape could take
+    color - tuple representing the color the shape, picked random from the color_list
+    x_r - the coordinate of the shape if it were to be reflected across the y-axis
+    y_d - the coordinates of the shape if it were to be reflected across the x-axis
+    Functions:
+    draw - renders the shape
+    fall - makes the shape fall
+    scroll - makes the shape scroll
+    scatter - makes all shapes on the screen spread out chaotically
+    bounce - like scatter, but the shapes reorient themselves randomly if they hit
+    the edges of the screen
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         self.x_location=x_location
         self.y_location=y_location
@@ -50,7 +54,6 @@ the edges of the screen
     def draw(self, screen):
         '''
         Draws the shape.
-
         This function is overwritten in all the subclasses of the Shape class,
         because each specific shape requires a different function from pygame
         to render it.
@@ -356,7 +359,7 @@ if __name__ == "__main__":
             elif event.type == pygame.MOUSEBUTTONUP:
                 drawing = False
 
-    # gets key that is pressed, determines which key that is, and acts accordingly
+# gets key that is pressed, determines which key that is, and acts accordingly
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
                 mods = pygame.key.get_mods()
@@ -364,7 +367,7 @@ if __name__ == "__main__":
                 if keys[pygame.K_c]:
                     shape_list.clear()
 
-    # keys for changing color scheme
+# keys for changing color scheme
                 elif keys[pygame.K_a]:
                     color_list = all_colors
                 elif keys[pygame.K_s]:
@@ -380,7 +383,7 @@ if __name__ == "__main__":
                 elif keys[pygame.K_g]:
                     color_list = reds_greens
 
-    # keys for manipulating modes (drawing, bouncing, scrolling, etc)
+# keys for manipulating modes (drawing, bouncing, scrolling, etc)
                 elif keys[pygame.K_1]:
                     mode = DRAW_MODE
                 elif keys[pygame.K_2]:
@@ -400,7 +403,7 @@ if __name__ == "__main__":
                     if mode == MIRROR_TWO_MODE:
                         mode = 0
 
-    # keys for manipulating size
+# keys for manipulating size
                 elif keys[pygame.K_MINUS]:
                     if size <= 1:
                         size = 1
@@ -420,71 +423,48 @@ if __name__ == "__main__":
                     else:
                         shape_type -= 1
 
-    # Key for undoing
+# Key for undoing
                 elif keys[pygame.K_z] and mods & pygame.KMOD_CTRL:
                     shape_list = shape_list[:len(shape_list)-5]
 
 
-    # quits when q is pressed
+# quits when q is pressed
                 elif keys[pygame.K_q]:
                     done = True
 
+# If mouse is down, gets mouse position, and adds a shape to the shape list
         if drawing:
+            # gets mouse position
             pos=pygame.mouse.get_pos()
             x=pos[0]
             y=pos[1]
+            # calculates inverse x and y coordinates for mirroring function
             x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
             y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
+            # creates list of types of shapes that can be added to list
             shape_types = [Circle(x, y, color_list, size),
             Square(x, y, color_list, size),
             Triangle(x, y, color_list, size),
             Hexagon(x, y, color_list, size),
             Bow_tie(x, y, color_list, size)]
-
-            # reverse_shape_types = [Circle(x_r, y, color_list, size),
-            # Square(x_r, y, color_list, size),
-            # Triangle(x_r, y, color_list, size),
-            # Hexagon(x_r, y, color_list, size),
-            # Bow_tie(x_r, y, color_list, size)]
-            #
-            # down_shape_types = [Circle(x, y_d, color_list, size),
-            # Square(x, y_d, color_list, size),
-            # Triangle(x, y_d, color_list, size),
-            # Hexagon(x, y_d, color_list, size),
-            # Bow_tie(x, y_d, color_list, size)]
-            #
-            # reverse_down_shape_types = [Circle(x_r, y_d, color_list, size),
-            # Square(x_r, y_d, color_list, size),
-            # Triangle(x_r, y_d, color_list, size),
-            # Hexagon(x_r, y_d, color_list, size),
-            # Bow_tie(x_r, y_d, color_list, size)]
-
+            # determines how many shapes to add to list, and does so
             curr_shape = shape_types[shape_type]
             if mode == MIRROR_ONE_MODE:
                 shape_list.append(curr_shape)
                 shape_list.append(curr_shape.mirror_y())
-                # print(type(shape))
-                # print(type(shape.mirror()))
-                # shape_list.append((type(shape))shape.mirror())
-                # # shape_list.append(reverse_shape_types[shape_type])
             elif mode == MIRROR_TWO_MODE:
                 shape_list.append(curr_shape)
                 shape_list.append(curr_shape.mirror_y())
                 shape_list.append(curr_shape.mirror_x())
                 shape_list.append(curr_shape.mirror_both())
-                # shape_list.append(shape_types[shape_type])
-                # shape_list.append(reverse_shape_types[shape_type])
-                # shape_list.append(down_shape_types[shape_type])
-                # shape_list.append(reverse_down_shape_types[shape_type])
             else:
                 shape_list.append(curr_shape)
 
         #Background color
         screen.fill(BLACK)
 
-        #tells all balls in the list to fall
+        #tells all shapes in the list to do one of their methods
         for shape in shape_list:
-            # Ball.Stay(screen)
             if mode == DRAW_MODE or mode == MIRROR_ONE_MODE or mode == MIRROR_TWO_MODE:
                 shape.draw(screen)
             elif mode == FALL_MODE:
@@ -496,9 +476,11 @@ if __name__ == "__main__":
             elif mode == BOUNCE_MODE:
                 shape.bounce(screen)
 
+        # updates game
         pygame.display.flip()
-
+        # controls how fast game updates
         clock.tick(60)
 
+    # quits pygame and exits window if done == True
     pygame.quit()
     exit()
