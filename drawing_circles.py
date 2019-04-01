@@ -20,77 +20,99 @@ class Shape():
     '''
     Defines a generic shape class, with general characteristics of any shape.
     Attributes:
-    x_location, y_location - coordinates of the center of the shape
-    x_speed - number representing the speed of movement in the x direction
-    y_speed - number representing speed of movement in the y direction
-    size - number representing the size (range?)
-    color_list - list of all possible colors that this shape could take
-    color - tuple representing the color the shape, picked random from the color_list
-    x_r - the coordinate of the shape if it were to be reflected across the y-axis
-    y_d - the coordinates of the shape if it were to be reflected across the x-axis
+        x_location, y_location - coordinates of the center of the shape
+        x_speed - number representing the speed of movement in the x direction
+        y_speed - number representing speed of movement in the y direction
+        size - number representing the size (range?)
+        color_list - list of all possible colors that this shape could take
+        color - tuple representing the color the shape, picked random from the color_list
+        x_r - the coordinate of the shape if it were to be reflected across the y-axis
+        y_d - the coordinates of the shape if it were to be reflected across the x-axis
     Functions:
-    draw - renders the shape
-    fall - makes the shape fall
-    scroll - makes the shape scroll
-    scatter - makes all shapes on the screen spread out chaotically
-    bounce - like scatter, but the shapes reorient themselves randomly if they hit
-    the edges of the screen
+        draw - renders the shape
+        fall - makes the shape fall
+        scroll - makes the shape scroll
+        scatter - makes all shapes on the screen spread out chaotically
+        bounce - like scatter, but the shapes reorient themselves randomly if they hit
+        the edges of the screen
     '''
     def __init__(self, x_location, y_location, color_list, size):
+
+        # Initializes the position of the shape
         self.x_location=x_location
         self.y_location=y_location
-        #you can change the speeds here by making them equal to something else
+
+        # Initializes the speed of shape's movement
         self.x_speed = random.choice(possible_speeds)
         self.y_speed = random.choice(possible_speeds)
-        #you can change the size here
+
+        # Initializes the appearance of the shape - size & color
         self.size = random.randint(5*size, 10*size) #7,15
-        # self.color = (random.randint(0, 255), random.randint(0, 255),random.randint(0, 255))
         self.color_list = color_list
         self.color = color_list[random.randint(0, len(color_list) - 1)]
 
+        # Calculates the position of the shape if it were reflected
+        # Calculates the x-position, if the shape was reflected across the y-axis
         self.x_r =  SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - self.x_location)
+        # Calculates the y-position, if the shape was reflected across the x-axis
         self.y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - self.y_location)
 
     def draw(self, screen):
         '''
         Draws the shape.
+
         This function is overwritten in all the subclasses of the Shape class,
         because each specific shape requires a different function from pygame
         to render it.
         '''
         pass
 
-    #Defines the bounce function that draws the circles and makes them bounce when they reach the sides
     def fall(self, screen):
+        '''
+        Causes the shape to fall down the screen, by incrementing the y-location of the shape.
+        The amount incremented is the y_speed, which is a random number.
+        '''
         self.draw(screen)
 
         #Adds the variable of speed to the variable of location every tick to make the circle move
-        self.y_location += 1#abs(self.y_speed)
+        self.y_location += abs(self.y_speed)
 
     def scroll(self, screen):
+        '''
+        Causes the shape to scroll across the screen, by incrementing the x-location of the shape.
+        The amount incremented is the x-axis, which is a random number.
+        '''
         self.draw(screen)
-        self.x_location += 1 #abs(self.x_speed)
-    #Defines the function move that draws the circles and makes them move offscreen
+        self.x_location += abs(self.x_speed)
 
     def scatter(self, screen):
+        '''
+        Causes the shape to scatter across the screen, by incrementing both the x-location
+        and the y-location of the shape. The amounts incremented are the x_speed and
+        y_speed respectively, which are both random numbers. This causes the shape
+        to move in essentially a random direction.
+        '''
         self.draw(screen)
 
-        #Adds the variable of speed to the variable of location every tick to make the circle move
         self.y_location += self.y_speed
         self.x_location += self.x_speed
 
     def bounce(self, screen):
+        '''
+        Causes the shape to scatter, but bounce and rebound in a random direction
+        when it hits the edges of the screen.
+        '''
         self.draw(screen)
 
-        #Tells ball to turn around when it reaches the edge of the screen
+        # Checks if the shape is at the edges of the screen
+        # If the shape is at the left or right edges, then it reverses its x-direction of movement
         if self.x_location >= SCREEN_WIDTH - self.size or self.x_location < self.size:
             self.x_speed = self.x_speed * -1
+        # If the shape is at the top or bottom, then it reverses its y-direction of movement
         if self.y_location >= SCREEN_HEIGHT - self.size or self.y_location < self.size:
             self.y_speed = self.y_speed * -1
 
-        #Makes circles move
-        self.x_location += self.x_speed
-        self.y_location += self.y_speed
+        self.scatter(screen)
 
 class Circle(Shape):
     def __init__(self, x_location, y_location, color_list, size):
@@ -117,24 +139,28 @@ class Circle(Shape):
 class Polygon(Shape):
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
+        self.get_points_list()
+
+    def get_points_list(self):
         self.points_list = [[int(self.x_location), int(self.y_location)]]
 
     def draw(self, screen):
+        self.get_points_list()
         pygame.draw.polygon(screen, self.color, self.points_list, self.size)
 
 
 class Triangle(Polygon):
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
-        self.median = math.sqrt(self.size**2 + (self.size/2)**2)
 
+    def get_points_list(self):
         self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
         self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
         self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
         self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
 
     def draw(self, screen, line_thickness = 2):
-
+        self.get_points_list()
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
@@ -155,6 +181,8 @@ class Triangle(Polygon):
 class Bow_tie(Polygon):
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
+
+    def get_points_list(self):
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
@@ -163,7 +191,7 @@ class Bow_tie(Polygon):
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
     def draw(self, screen, line_thickness = 2):
-
+        self.get_points_list()
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
@@ -184,6 +212,8 @@ class Bow_tie(Polygon):
 class Square(Polygon):
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
+
+    def get_points_list(self):
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
@@ -192,7 +222,7 @@ class Square(Polygon):
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
     def draw(self, screen, line_thickness = 2):
-
+        self.get_points_list()
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
@@ -213,6 +243,8 @@ class Square(Polygon):
 class Hexagon(Polygon):
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
+
+    def get_points_list(self):
         self.vertex1 = [self.x_location, self.y_location+self.size]
         self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
         self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
@@ -224,7 +256,7 @@ class Hexagon(Polygon):
                             self.vertex4, self.vertex5, self.vertex6]
 
     def draw(self, screen, line_thickness = 2):
-
+        self.get_points_list()
         pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
 
     def mirror_y(self):
