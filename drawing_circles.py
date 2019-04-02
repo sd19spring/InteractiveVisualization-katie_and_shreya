@@ -60,7 +60,6 @@ class Shape():
     def draw(self, screen):
         '''
         Draws the shape.
-
         This function is overwritten in all the subclasses of the Shape class,
         because each specific shape requires a different function from pygame
         to render it.
@@ -132,14 +131,9 @@ class Circle(Shape):
         '''
         Mirrors the circle across the y-axis.
         '''
-
-        # Creates a mirrored Circle
+        # Creates a mirrored Circle with the same size as the origional one
         mirrored = Circle(self.x_r, self.y_location, self.color_list, self.size)
-
-        # Forces the size of the mirrored circle to be the same as the size of
-        # this circle (otherwise it is random)
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_x(self):
@@ -148,11 +142,7 @@ class Circle(Shape):
         '''
         # Creates a mirrored Circle
         mirrored = Circle(self.x_location, self.y_d, self.color_list, self.size)
-
-        # Forces the size of the mirrored circle to be the same as the size of
-        # this circle (otherwise it is random)
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_both(self):
@@ -161,11 +151,7 @@ class Circle(Shape):
         '''
         # Creates a mirrored Circle
         mirrored = Circle(self.x_r, self.y_d, self.color_list, self.size)
-
-        # Forces the size of the mirrored circle to be the same as the size of
-        # this circle (otherwise it is random)
         mirrored.size = self.size
-
         return mirrored
 
 class Polygon(Shape):
@@ -178,8 +164,6 @@ class Polygon(Shape):
     '''
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
-
-        # Updates the points list
         self.get_points_list()
 
     def get_points_list(self):
@@ -195,8 +179,6 @@ class Polygon(Shape):
         '''
         # Updates the points list
         self.get_points_list()
-
-        # Renders the polygon, using pygame's draw.polygon function
         pygame.draw.polygon(screen, self.color, self.points_list, self.size)
 
 
@@ -204,7 +186,6 @@ class Triangle(Polygon):
     '''
     Defines a Triangle object, which is a subclass of the Polygon class.
     Has all the attributes and functions of the Polygon class.
-
     The Triangle's points list contains three points, with each point
     representing on vertex of the triangle.
     '''
@@ -212,58 +193,28 @@ class Triangle(Polygon):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
-        '''
-        Calculates the coordinates of each vertex of the triangle, relative
-        to the center of the triangle.
-        '''
-
-        # Calculates the position of each vertex
         self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
         self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
         self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
-
-        # Updates the list
         self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
 
+    def draw(self, screen, line_thickness = 2):
+        self.get_points_list()
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
     def mirror_y(self):
-        '''
-        Draws the Triangle mirrored across the y-axis.
-        '''
-        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_r, self.y_location, self.color_list, self.size)
-
-        # Ensures that the mirrored Triangle is the same size as the original
-        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_x(self):
-        '''
-        Draws the Triangle mirrored across the x-axis.
-        '''
-
-        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_location, self.y_d, self.color_list, self.size)
-
-        # Ensures that the mirrored Triangle is the same size as the original
-        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_both(self):
-        '''
-        Mirrors the triangle over both the x and y axes.
-        '''
-
-        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_r, self.y_d, self.color_list, self.size)
-
-        # Ensures that the mirrored Triangle is the same size as the original
-        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
-
         return mirrored
 
 class Bow_tie(Polygon):
@@ -275,60 +226,30 @@ class Bow_tie(Polygon):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
-        '''
-        Builds the points list for a Bow-tie, by calculating the position of
-        each vertex and adding each vertex to a list.
-        '''
-
-        # Calculates the coordinates of each vertex
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
 
-        # Adds each vertex to the points list
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
+    def draw(self, screen, line_thickness = 2):
+        self.get_points_list()
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
     def mirror_y(self):
-        '''
-        Mirrors the Bowtie across the y-axis.
-        '''
-
-        # Creates mirrored Bow-tie
         mirrored = Bow_tie(self.x_r, self.y_location, self.color_list, self.size)
-
-        # Ensures that the mirrored Bowtie is the same size as the original,
-        # as otherwise the size is determined randomly
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_x(self):
-        '''
-        Mirrors the Bowtie across the x-axis.
-        '''
-
-        # Creates mirrored Bowtie
         mirrored = Bow_tie(self.x_location, self.y_d, self.color_list, self.size)
-
-        # Ensures that the mirrored Bowtie is the same size as the original, as
-        # otherwise the size is determined randomly.
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_both(self):
-        '''
-        Mirrors the Bowtie across both the x and y axes.
-        '''
-
-        # Creates mirrored Bowtie
         mirrored = Bow_tie(self.x_r, self.y_d, self.color_list, self.size)
-
-        # Ensures that the mirrored Bowtie is the same size as the original,
-        # as otherwise the size is determined randomly
         mirrored.size = self.size
-
         return mirrored
 
 class Square(Polygon):
@@ -340,54 +261,29 @@ class Square(Polygon):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
-        '''
-        Gets the points_list for the square, which contains the points
-        representing all the vertices of the square.
-        '''
-        # Calculates the coordinates of each vertex of the square.
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
 
-        # Adds each vertex into the points_list
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
+    def draw(self, screen, line_thickness = 2):
+        self.get_points_list()
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
     def mirror_y(self):
-        '''
-        Mirrors the square across the y-axis.
-        '''
-
-        # Creates mirrored Square
         mirrored = Square(self.x_r, self.y_location, self.color_list, self.size)
-
-        # Makes sure that the mirrored Square is the same size as the
-        # original Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
     def mirror_x(self):
-        '''
-        Mirrors the square across the x-axis.
-        '''
-        # Creates mirrored Square
         mirrored = Square(self.x_location, self.y_d, self.color_list, self.size)
-
-        # Makes sure that the mirrored Square is the same size as the
-        # original Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
     def mirror_both(self):
-        '''
-        Mirrors the square across the x and y axes.
-        '''
-
-        # Creates mirrored Square
         mirrored = Square(self.x_r, self.y_d, self.color_list, self.size)
-
-        # Makes sure that the mirrored Square is the same size as the original
-        # Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
@@ -400,12 +296,6 @@ class Hexagon(Polygon):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
-        '''
-        Calculates the vertices of the Hexagon and puts them into the Hexagon's
-        points list.
-        '''
-
-        # Calculates the coordinates of each vertex of the Hexagon
         self.vertex1 = [self.x_location, self.y_location+self.size]
         self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
         self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
@@ -413,48 +303,26 @@ class Hexagon(Polygon):
         self.vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
         self.vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
 
-        # Adds all the vertices to the list of points
         self.points_list = [self.vertex1, self.vertex2, self.vertex3,
                             self.vertex4, self.vertex5, self.vertex6]
 
+    def draw(self, screen, line_thickness = 2):
+        self.get_points_list()
+        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
+
     def mirror_y(self):
-        '''
-        Mirrors the Hexagon over the y-axis.
-        '''
-
-        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_r, self.y_location, self.color_list, self.size)
-
-        # Makes sure that the mirrored Hexagon's size is the same as the original
-        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
         return mirrored
 
     def mirror_x(self):
-        '''
-        Mirrors the Hexagon over the x-axis.
-        '''
-        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_location, self.y_d, self.color_list, self.size)
-
-        # Makes sure that the mirrored Hexagon's size is the same as the original
-        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
-
         return mirrored
 
     def mirror_both(self):
-        '''
-        Mirrors the Hexagon over both the x and y axes.
-        '''
-
-        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_r, self.y_d, self.color_list, self.size)
-
-        # Makes sure that the mirrored Hexagon's size is the same as the original
-        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
-
         return mirrored
 
 def print_instructions():
@@ -523,7 +391,7 @@ if __name__ == "__main__":
     BROWN=(120, 70, 15)
     DARKBROWN=(80, 40, 10)
 
-    # Defines color lists
+    # Defines color lists:
     all_colors = [RED, REDORANGE, ORANGE, YELLOWORANGE, YELLOW, YELLOWGREEN, GREEN, DARKGREEN,BLUEGREEN, CYAN, SKYBLUE, BLUE, INDIGO, LIGHTPURPLE, PURPLE, DARKPURPLE, MAGENTA, PINK, BLACK, DARKGREY, GREY, LIGHTGREY, WHITE, BROWN, DARKBROWN]
     ocean_colors = [DARKGREEN,BLUEGREEN,CYAN,SKYBLUE,BLUE,INDIGO,NIGHTSKY,DARKPURPLE,DARKGREY]
     pastel_colors = [LIGHTGREY,LIGHTPURPLE,PINK,WHITE,SKYBLUE]
@@ -541,7 +409,7 @@ if __name__ == "__main__":
     MIRROR_DIAGONAL_MODE = 8
     MIRROR_ALL_MODE = 9
 
-    # Creates ranges for possible speeds
+    # Creates list of possible x and y speeds for objects
     possible_speeds = [-3, -2, -1, 1, 2, 3]
 
     # Tells the pygame program for python to start
@@ -550,6 +418,7 @@ if __name__ == "__main__":
     # Set the width and height of the screen [width, height] and defines the screen
     SCREEN_WIDTH = 1200
     SCREEN_HEIGHT = 800
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     #Sets the caption at the top
@@ -561,22 +430,19 @@ if __name__ == "__main__":
     # Controls how fast the screen updates
     clock = pygame.time.Clock()
 
-
-    # Initialize the screen
-    # Prints instructions to the screen
     print_instructions()
-    #Creates list that the shapes can be added to later
+
+    #Creates ball list that the circles can be added to later
     shape_list = []
-    # Defaults the drawing mode to false so that nothing is drawn to the screen
-    # until the user clicks
+
     drawing = False
-    # Initializes the color list, mode, size, and shape type, all of which
-    # the user can change with keys.
     color_list = all_colors
     mode = 1
     size = 2
     shape_type = 0
 
+
+    # -------- Main Program Loop -----------
     while not done:
         for event in pygame.event.get():
 
@@ -596,117 +462,96 @@ if __name__ == "__main__":
             elif event.type == pygame.KEYDOWN:
                 keys = pygame.key.get_pressed()
                 mods = pygame.key.get_mods()
-
                 # Clears screen if the C key is pressed
                 if keys[pygame.K_c]:
                     shape_list.clear()
 
-                # Changes the color list
-                # Selects all colors if the A key is pressed
+            # Changes the color list
+            # Selects all colors if the A key is pressed
                 elif keys[pygame.K_a]:
                     color_list = all_colors
                 elif keys[pygame.K_s]:
-                    if mods & pygame.KMOD_CTRL:
                         # Saves screenshot of the screen if CTRL+S is pressed
+                    if mods & pygame.KMOD_CTRL:
                         filename = str(input("Enter a name for the screenshot: ")) + ".jpg"
                         pygame.image.save(screen, filename)
                     else:
-                        # Selects the ocean colors if the S key is pressed
                         color_list = ocean_colors
-                # Selects pastel colors if the D key is pressed
                 elif keys[pygame.K_d]:
                     color_list = pastel_colors
-                # Selects warm colors if the F key is pressed
                 elif keys[pygame.K_f]:
                     color_list = warm_colors
-                # Selects reds and greens if the G key is pressed
                 elif keys[pygame.K_g]:
                     color_list = reds_greens
 
-                # Changes the drawing mode
-                # Simple stationary drawing if the 1 key is pressed
+# keys for manipulating modes (drawing, bouncing, scrolling, etc)
                 elif keys[pygame.K_1]:
                     mode = DRAW_MODE
-                # Falling shapes if the 2 key is pressed
                 elif keys[pygame.K_2]:
                     mode = FALL_MODE
-                # Scrolling shapes if the 3 key is pressed
                 elif keys[pygame.K_3]:
                     mode = SCROLL_MODE
-                # Scattering shapes if the 4 key is pressed
                 elif keys[pygame.K_4]:
                     mode = SCATTER_MODE
-                # Bouncing shapes if the 5 key is pressed
                 elif keys[pygame.K_5]:
                     mode = BOUNCE_MODE
-                # Mirrors shapes across the y-axis if the 6 key is pressed
                 elif keys[pygame.K_6]:
                     mode = MIRROR_Y_MODE
-                # Mirrors shapes across the x-axis if the 7 key is pressed
                 elif keys[pygame.K_7]:
                     mode = MIRROR_X_MODE
-                # Mirrors shapes across both axes if the 8 key is pressed
                 elif keys[pygame.K_8]:
                     mode = MIRROR_DIAGONAL_MODE
-                # Mirrors shapes in all directions if the 9 key is pressed
                 elif keys[pygame.K_9]:
                     mode = MIRROR_ALL_MODE
-                # Changes to the next drawing mode (cycling back)
                 elif keys[pygame.K_SPACE]:
                     mode += 1
                     if mode == MIRROR_ALL_MODE:
                         mode = 0
-                # Changes the size of the shape
-                # Decreases the size if the minus key is pressed
+
+# keys for manipulating size
                 elif keys[pygame.K_MINUS]:
                     if size <= 1:
                         size = 1
                     else:
                         size -= 1
-                # Increases the size if the plus key is pressed
                 elif keys[pygame.K_EQUALS] or keys[pygame.K_PLUS]:
                     size += 1
-
-                # Changes the shape type
-                # Moves to the next shape type if the up arrow key is pressed
+# Changes the shape type
                 elif keys[pygame.K_UP]:
                     if shape_type == 4:
                         shape_type = 0
                     else:
                         shape_type += 1
-                # Moves to the previous shape type if the down arrow key is pressed
                 elif keys[pygame.K_DOWN]:
                     if shape_type == 0:
                         shape_type = 4
                     else:
                         shape_type -= 1
 
-                # Removes the five most recently drawn shapes when CTRL+Z is pressed
+# Removes the five most recently drawn shapes when CTRL+Z is pressed
                 elif keys[pygame.K_z] and mods & pygame.KMOD_CTRL:
                     shape_list = shape_list[:len(shape_list)-5]
 
-                # Quits if the user presses the Q key
+
+# quits when q is pressed
                 elif keys[pygame.K_q]:
                     done = True
 
-        # Draws on the screen
+# Draws on the screen
         if drawing:
             # gets mouse position
             pos=pygame.mouse.get_pos()
             x=pos[0]
             y=pos[1]
-
             # calculates inverse x and y coordinates for mirroring function
             x_r = SCREEN_WIDTH/2 + (SCREEN_WIDTH/2 - x)
             y_d = SCREEN_HEIGHT/2 + (SCREEN_HEIGHT/2 - y)
-
             # creates list of types of shapes that can be added to list
             shape_types = [Circle(x, y, color_list, size),
             Square(x, y, color_list, size),
             Triangle(x, y, color_list, size),
             Hexagon(x, y, color_list, size),
             Bow_tie(x, y, color_list, size)]
-
             # determines how many shapes to add to list, and does so
             curr_shape = shape_types[shape_type]
             if mode == MIRROR_Y_MODE:
@@ -726,10 +571,10 @@ if __name__ == "__main__":
             else:
                 shape_list.append(curr_shape)
 
-        # Sets background color to black
+        # Sets background color
         screen.fill(BLACK)
 
-        # Animates/draws all the shapes
+        # Animates or draws all shapes
         for shape in shape_list:
             if mode == DRAW_MODE or mode == MIRROR_Y_MODE or mode == MIRROR_X_MODE or mode == MIRROR_DIAGONAL_MODE or mode == MIRROR_ALL_MODE:
                 shape.draw(screen)
@@ -744,7 +589,6 @@ if __name__ == "__main__":
 
         # updates screen
         pygame.display.flip()
-
         # controls how fast game updates
         clock.tick(60)
 
