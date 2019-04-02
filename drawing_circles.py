@@ -263,76 +263,149 @@ class Triangle(Polygon):
         # Ensures that the mirrored Triangle is the same size as the original
         # (as the size is otherwise picked randomly)
         mirrored.size = self.size
-        
+
         return mirrored
 
 class Bow_tie(Polygon):
+    '''
+    Defines the Bowtie object, which is a subclass of the Polygon class.
+    Has all the attributes and functions of the Polygon class.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
+        '''
+        Builds the points list for a Bow-tie, by calculating the position of
+        each vertex and adding each vertex to a list.
+        '''
+
+        # Calculates the coordinates of each vertex
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
 
+        # Adds each vertex to the points list
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
-    def draw(self, screen, line_thickness = 2):
-        self.get_points_list()
-        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
-
     def mirror_y(self):
+        '''
+        Mirrors the Bowtie across the y-axis.
+        '''
+
+        # Creates mirrored Bow-tie
         mirrored = Bow_tie(self.x_r, self.y_location, self.color_list, self.size)
+
+        # Ensures that the mirrored Bowtie is the same size as the original,
+        # as otherwise the size is determined randomly
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_x(self):
+        '''
+        Mirrors the Bowtie across the x-axis.
+        '''
+
+        # Creates mirrored Bowtie
         mirrored = Bow_tie(self.x_location, self.y_d, self.color_list, self.size)
+
+        # Ensures that the mirrored Bowtie is the same size as the original, as
+        # otherwise the size is determined randomly.
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_both(self):
+        '''
+        Mirrors the Bowtie across both the x and y axes.
+        '''
+
+        # Creates mirrored Bowtie
         mirrored = Bow_tie(self.x_r, self.y_d, self.color_list, self.size)
+
+        # Ensures that the mirrored Bowtie is the same size as the original,
+        # as otherwise the size is determined randomly
         mirrored.size = self.size
+
         return mirrored
 
 class Square(Polygon):
+    '''
+    Defines a Square object, which is a subclass of the Polygon class.
+    Has all the attributes and functions of the Polygon object.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
+        '''
+        Gets the points_list for the square, which contains the points
+        representing all the vertices of the square.
+        '''
+        # Calculates the coordinates of each vertex of the square.
         self.vertex1 = [self.x_location+(1/2)*self.size, self.y_location+(1/2)*self.size]
         self.vertex2 = [self.x_location+(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex3 = [self.x_location-(1/2)*self.size, self.y_location-(1/2)*self.size]
         self.vertex4 = [self.x_location-(1/2)*self.size, self.y_location+(1/2)*self.size]
 
+        # Adds each vertex into the points_list
         self.points_list = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
 
-    def draw(self, screen, line_thickness = 2):
-        self.get_points_list()
-        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
-
     def mirror_y(self):
+        '''
+        Mirrors the square across the y-axis.
+        '''
+
+        # Creates mirrored Square
         mirrored = Square(self.x_r, self.y_location, self.color_list, self.size)
+
+        # Makes sure that the mirrored Square is the same size as the
+        # original Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
     def mirror_x(self):
+        '''
+        Mirrors the square across the x-axis.
+        '''
+        # Creates mirrored Square
         mirrored = Square(self.x_location, self.y_d, self.color_list, self.size)
+
+        # Makes sure that the mirrored Square is the same size as the
+        # original Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
     def mirror_both(self):
+        '''
+        Mirrors the square across the x and y axes.
+        '''
+
+        # Creates mirrored Square
         mirrored = Square(self.x_r, self.y_d, self.color_list, self.size)
+
+        # Makes sure that the mirrored Square is the same size as the original
+        # Square, as otherwise its size is determined randomly
         mirrored.size = self.size
         return mirrored
 
 class Hexagon(Polygon):
+    '''
+    Defines a Hexagon object, which is a subclass of the Polygon class.
+    Has all the attributes and function of a Polygon.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
+        '''
+        Calculates the vertices of the Hexagon and puts them into the Hexagon's
+        points list.
+        '''
+
+        # Calculates the coordinates of each vertex of the Hexagon
         self.vertex1 = [self.x_location, self.y_location+self.size]
         self.vertex2 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
         self.vertex3 = [self.x_location+self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
@@ -340,26 +413,48 @@ class Hexagon(Polygon):
         self.vertex5 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location-(1/2)*self.size]
         self.vertex6 = [self.x_location-self.size*math.sin(math.pi/3), self.y_location+(1/2)*self.size]
 
+        # Adds all the vertices to the list of points
         self.points_list = [self.vertex1, self.vertex2, self.vertex3,
                             self.vertex4, self.vertex5, self.vertex6]
 
-    def draw(self, screen, line_thickness = 2):
-        self.get_points_list()
-        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
-
     def mirror_y(self):
+        '''
+        Mirrors the Hexagon over the y-axis.
+        '''
+
+        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_r, self.y_location, self.color_list, self.size)
+
+        # Makes sure that the mirrored Hexagon's size is the same as the original
+        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
         return mirrored
 
     def mirror_x(self):
+        '''
+        Mirrors the Hexagon over the x-axis.
+        '''
+        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_location, self.y_d, self.color_list, self.size)
+
+        # Makes sure that the mirrored Hexagon's size is the same as the original
+        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_both(self):
+        '''
+        Mirrors the Hexagon over both the x and y axes.
+        '''
+
+        # Creates the mirrored Hexagon
         mirrored = Hexagon(self.x_r, self.y_d, self.color_list, self.size)
+
+        # Makes sure that the mirrored Hexagon's size is the same as the original
+        # Hexagon, preventing the size from being randomly determined
         mirrored.size = self.size
+        
         return mirrored
 
 def print_instructions():
