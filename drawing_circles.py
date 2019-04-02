@@ -115,67 +115,155 @@ class Shape():
         self.scatter(screen)
 
 class Circle(Shape):
+    '''
+    Defines a Circle, which is a subclass of the Shape class.
+    Has all the attributes and functionality of the Shape class.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
 
     def draw(self, screen):
+        '''
+        Draws a circle on the screen using pygame's draw function.
+        '''
         pygame.draw.circle(screen, self.color, [int(self.x_location), int(self.y_location)], self.size)
 
     def mirror_y(self):
+        '''
+        Mirrors the circle across the y-axis.
+        '''
+
+        # Creates a mirrored Circle
         mirrored = Circle(self.x_r, self.y_location, self.color_list, self.size)
+
+        # Forces the size of the mirrored circle to be the same as the size of
+        # this circle (otherwise it is random)
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_x(self):
+        '''
+        Mirrors the circle across the x-axis.
+        '''
+        # Creates a mirrored Circle
         mirrored = Circle(self.x_location, self.y_d, self.color_list, self.size)
+
+        # Forces the size of the mirrored circle to be the same as the size of
+        # this circle (otherwise it is random)
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_both(self):
+        '''
+        Mirrors the circle across both the x-axis and the y-axis.
+        '''
+        # Creates a mirrored Circle
         mirrored = Circle(self.x_r, self.y_d, self.color_list, self.size)
+
+        # Forces the size of the mirrored circle to be the same as the size of
+        # this circle (otherwise it is random)
         mirrored.size = self.size
+
         return mirrored
 
 class Polygon(Shape):
+    '''
+    Defines a Polygon object, which is a subclass of the Shape class.
+    Has all the attributes of the Shape class, along with:
+        points_list - the list of points defining the vertices of the polygon,
+        with each point as a list with two elements
+    Has all the functions of the Shape class.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Shape.__init__(self, x_location, y_location, color_list, size)
+
+        # Updates the points list
         self.get_points_list()
 
     def get_points_list(self):
+        '''
+        Creates the list of points defining the vertices of the polygon.
+        Will be overwritten by every subclass of Polygon.
+        '''
         self.points_list = [[int(self.x_location), int(self.y_location)]]
 
     def draw(self, screen):
+        '''
+        Draws the polygon on the screen.
+        '''
+        # Updates the points list
         self.get_points_list()
+
+        # Renders the polygon, using pygame's draw.polygon function
         pygame.draw.polygon(screen, self.color, self.points_list, self.size)
 
 
 class Triangle(Polygon):
+    '''
+    Defines a Triangle object, which is a subclass of the Polygon class.
+    Has all the attributes and functions of the Polygon class.
+
+    The Triangle's points list contains three points, with each point
+    representing on vertex of the triangle.
+    '''
     def __init__(self, x_location, y_location, color_list, size):
         Polygon.__init__(self, x_location, y_location, color_list, size)
 
     def get_points_list(self):
+        '''
+        Calculates the coordinates of each vertex of the triangle, relative
+        to the center of the triangle.
+        '''
+
+        # Calculates the position of each vertex
         self.top_vertex = [self.x_location, self.y_location - (2/3)*self.size]
         self.left_vertex = [self.x_location - (1/2)*self.size, self.y_location + (1/3)*self.size]
         self.right_vertex = [self.x_location + (1/2)*self.size, self.y_location + (1/3)*self.size]
+
+        # Updates the list
         self.points_list = [self.top_vertex, self.left_vertex, self.right_vertex]
 
-    def draw(self, screen, line_thickness = 2):
-        self.get_points_list()
-        pygame.draw.polygon(screen, self.color, self.points_list, line_thickness)
-
     def mirror_y(self):
+        '''
+        Draws the Triangle mirrored across the y-axis.
+        '''
+        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_r, self.y_location, self.color_list, self.size)
+
+        # Ensures that the mirrored Triangle is the same size as the original
+        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_x(self):
+        '''
+        Draws the Triangle mirrored across the x-axis.
+        '''
+
+        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_location, self.y_d, self.color_list, self.size)
+
+        # Ensures that the mirrored Triangle is the same size as the original
+        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
+
         return mirrored
 
     def mirror_both(self):
+        '''
+        Mirrors the triangle over both the x and y axes.
+        '''
+
+        # Creates the mirrored Triangle
         mirrored = Triangle(self.x_r, self.y_d, self.color_list, self.size)
+
+        # Ensures that the mirrored Triangle is the same size as the original
+        # (as the size is otherwise picked randomly)
         mirrored.size = self.size
+        
         return mirrored
 
 class Bow_tie(Polygon):
