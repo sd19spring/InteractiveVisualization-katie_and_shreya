@@ -1,4 +1,5 @@
-# InteractiveVisualization-katie_and_shreya
+# Interactive Art - Drawing Game 
+## Shreya Chowdhary and Katie Foster
 
 This program is an interactive art program created using Python and Pygame.
 
